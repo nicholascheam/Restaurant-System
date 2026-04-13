@@ -11,6 +11,9 @@ public class MenuItem {
     int getId() {
         return id;
     }
+    String getName() {
+        return name;
+    }
     double getPrice() {
         return price;
     }
@@ -29,10 +32,10 @@ public class MenuItem {
     void setDescription(String description) {
         this.description = description;
     }
-    void updateStock(int stock) {
+    void setStock(int stock) {
         this.stock = stock;
     }
     boolean isAvailable() {
-        return active;
+        return active && stock>0;
     }
 }

@@ -19,21 +19,16 @@ public class User {
     String getRole() {
         return role;
     }
-    void setId(int id) {
+    User(int id, String username, String password, String role) {
         this.id = id;
-    }
-    void setUsername(String username) {
         this.username = username;
+        this.password = password;
+        this.role = role;
     }
     void setRole(String role) {
         this.role = role;
     }
     boolean isAdmin() {
-        if (role == "admin"){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return role.equals("admin");
     }
 }

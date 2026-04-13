@@ -5,12 +5,10 @@ public class OrderItem {
     int quantity;
     double priceAtPurchase;
 
-    String getMenuItem() {
-        return menuItem.name;
+    MenuItem getMenuItem() {
+        return menuItem;
     }
-    int getId() {
-        return menuItem.id;
-    }
+
     int getQuantity() {
         return quantity;
     }

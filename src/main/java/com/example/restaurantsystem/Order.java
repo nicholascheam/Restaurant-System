@@ -9,6 +9,10 @@ public class Order {
     LocalDateTime dateTime;
     ArrayList<OrderItem> items;
 
+    Order(User user){
+        this.user = user;
+        this.items = new ArrayList<>();
+    }
     void addItem(MenuItem menuItem, int quantity) {
 
         if (quantity <= 0) {

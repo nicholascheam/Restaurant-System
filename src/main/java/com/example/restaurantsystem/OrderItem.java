@@ -5,16 +5,16 @@ public class OrderItem {
     int quantity;
     double priceAtPurchase;
 
-    String getMenuItem(){
+    String getMenuItem() {
         return menuItem.name;
     }
-    int getId(){
+    int getId() {
         return menuItem.id;
     }
-    int getQuantity(){
+    int getQuantity() {
         return quantity;
     }
-    void setQuantity(int quantity){
+    void setQuantity(int quantity) {
         this.quantity = quantity;
     }
     OrderItem(MenuItem menuItem, int quantity) {

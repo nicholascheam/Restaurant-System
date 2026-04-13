@@ -8,31 +8,31 @@ public class MenuItem {
     int stock;
     boolean active;
 
-    int getId(){
+    int getId() {
         return id;
     }
-    double getPrice(){
+    double getPrice() {
         return price;
     }
-    String getDescription(){
+    String getDescription() {
         return description;
     }
-    int getStock(){
+    int getStock() {
         return stock;
     }
-    void setId(int id){
+    void setId(int id) {
         this.id = id;
     }
-    void setPrice(double price){
+    void setPrice(double price) {
         this.price = price;
     }
-    void setDescription(String description){
+    void setDescription(String description) {
         this.description = description;
     }
-    void updateStock(int stock){
+    void updateStock(int stock) {
         this.stock = stock;
     }
-    boolean isAvailable(){
+    boolean isAvailable() {
         return active;
     }
 }

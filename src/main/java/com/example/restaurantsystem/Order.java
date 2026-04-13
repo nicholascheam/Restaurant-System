@@ -9,9 +9,6 @@ public class Order {
     LocalDateTime dateTime;
     ArrayList<OrderItem> items;
 
-    void totalPrice(){
-
-    }
     void addItem(MenuItem menuItem, int quantity) {
 
         if (quantity <= 0) {
@@ -41,10 +38,43 @@ public class Order {
         OrderItem newItem = new OrderItem(menuItem, quantity);
         items.add(newItem);
     }
-    void removeItem(MenuItem menuItem, int quantity){
+    void removeItem(MenuItem menuItem, int quantity) {
 
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Invalid quantity");
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            OrderItem oi = items.get(i);
+
+            if (oi.getMenuItem().getId() == menuItem.getId()) {
+
+                if (quantity > oi.getQuantity()) {
+                    System.out.println("Cannot remove more than existing quantity");
+                    return;
+                }
+
+                int newQuantity = oi.getQuantity() - quantity;
+
+                if (newQuantity == 0) {
+                    items.remove(i);
+                } else {
+                    oi.setQuantity(newQuantity);
+                }
+
+                return;
+            }
+        }
+
+        System.out.println("Item not found in order");
     }
-    void calculateTotal(){
+    double calculateTotal() {
+        double total = 0;
 
+        for (OrderItem oi : items) {
+            total += oi.getSubtotal();
+        }
+
+        return total;
     }
 }

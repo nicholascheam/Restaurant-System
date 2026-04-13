@@ -6,29 +6,29 @@ public class User {
     String password;
     String role;
 
-    int getId(){
+    int getId() {
         return id;
     }
-    String getUsername(){
+    String getUsername() {
         return username;
     }
     // maybe not do this
-    String getPassword(){
+    String getPassword() {
         return password;
     }
-    String getRole(){
+    String getRole() {
         return role;
     }
-    void setId(int id){
+    void setId(int id) {
         this.id = id;
     }
-    void setUsername(String username){
+    void setUsername(String username) {
         this.username = username;
     }
-    void setRole(String role){
+    void setRole(String role) {
         this.role = role;
     }
-    boolean isAdmin(){
+    boolean isAdmin() {
         if (role == "admin"){
             return true;
         }

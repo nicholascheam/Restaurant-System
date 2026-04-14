@@ -29,6 +29,6 @@ public class User {
         this.role = role;
     }
     boolean isAdmin() {
-        return role.equals("admin");
+        return "admin".equals(role);
     }
 }

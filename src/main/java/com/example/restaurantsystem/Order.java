@@ -8,15 +8,31 @@ public class Order {
     User user;
     LocalDateTime dateTime;
     ArrayList<OrderItem> items;
+    // getters, setters in "Order" method
+    User getUser() {
+        return user;
+    }
+    ArrayList<OrderItem> getItems() {
+        return items;
+    }
+    LocalDateTime getDateTime() {
+        return dateTime;
+    }
 
     Order(User user){
         this.user = user;
         this.items = new ArrayList<>();
+        this.dateTime = LocalDateTime.now();
     }
     void addItem(MenuItem menuItem, int quantity) {
         // prevent order -1 items
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity");
+        }
+        // check for availability
+        if (!menuItem.isAvailable()) {
+            System.out.println("Item not available");
+            return;
         }
         // check for stock vs order quantity
         if (menuItem.getStock() < quantity) {
@@ -82,5 +98,9 @@ public class Order {
         }
 
         return total;
+    }
+    // for clearing the cart
+    void clear() {
+        items.clear();
     }
 }

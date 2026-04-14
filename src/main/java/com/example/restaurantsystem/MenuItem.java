@@ -35,6 +35,9 @@ public class MenuItem {
     void setStock(int stock) {
         this.stock = stock;
     }
+    void setActive(boolean active) {
+        this.active = active;
+    }
     // check for availability includes stock availability
     boolean isAvailable() {
         return active && stock>0;

@@ -12,6 +12,12 @@ public class OrderItem {
     int getQuantity() {
         return quantity;
     }
+    double getPriceAtPurchase() {
+        return priceAtPurchase;
+    }
+    int getMenuItemId() {
+        return menuItem.getId();
+    }
     void setQuantity(int quantity) {
         this.quantity = quantity;
     }

@@ -5,7 +5,7 @@ public class User {
     String username;
     String password;
     String role;
-
+    // getter and setters
     int getId() {
         return id;
     }

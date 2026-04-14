@@ -4,7 +4,7 @@ public class OrderItem {
     MenuItem menuItem;
     int quantity;
     double priceAtPurchase;
-
+    // getter and setters
     MenuItem getMenuItem() {
         return menuItem;
     }
@@ -21,7 +21,7 @@ public class OrderItem {
         this.priceAtPurchase = menuItem.getPrice();
     }
 
-
+    // subtotaling the item ONLY, goes into order class for total
     double getSubtotal() {
         return quantity * priceAtPurchase;
     }

@@ -7,7 +7,7 @@ public class MenuItem {
     String description;
     int stock;
     boolean active;
-
+    // getter and setters
     int getId() {
         return id;
     }
@@ -35,6 +35,7 @@ public class MenuItem {
     void setStock(int stock) {
         this.stock = stock;
     }
+    // check for availability includes stock availability
     boolean isAvailable() {
         return active && stock>0;
     }

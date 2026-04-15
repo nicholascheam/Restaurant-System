@@ -26,6 +26,9 @@ public class MenuItem {
     void setId(int id) {
         this.id = id;
     }
+    void setName(String name) {
+        this.name = name;
+    }
     void setPrice(double price) {
         this.price = price;
     }

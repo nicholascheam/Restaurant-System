@@ -13,7 +13,7 @@ public class RestaurantApp extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Login.fxml"));
         Parent root = fxmlLoader.load();
-        stage.setTitle("Hello!");
+        stage.setTitle("Restaurant System");
         stage.setScene(new Scene(root));
         stage.show();
     }

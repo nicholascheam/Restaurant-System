@@ -6,12 +6,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.restaurantsystem.MenuController"
-      spacing="10" alignment="CENTER">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.restaurantsystem.MenuController">
 
-    <Label text="Menu"/>
+    <!-- TOP BAR -->
+    <HBox spacing="20" alignment="CENTER_RIGHT">
+        <Label fx:id="userLabel"/>
+        <Button text="Cart"/>
+        <Button text="Logout" onAction="#handleLogout"/>
+    </HBox>
 
-    <GridPane fx:id="menuGrid" hgap="20" vgap="20"/>
+    <!-- MENU -->
+    <center>
+        <GridPane fx:id="menuGrid" hgap="20" vgap="20"/>
+    </center>
 
-</VBox>
+    <!-- CART -->
+    <right>
+        <VBox spacing="10">
+            <Label text="Cart"/>
+            <VBox fx:id="cartBox"/>
+            <Label fx:id="totalLabel"/>
+        </VBox>
+    </right>
+
+    <!-- BOTTOM -->
+    <bottom>
+        <Button text="Place Order" onAction="#handlePlaceOrder"/>
+    </bottom>
+
+</BorderPane>

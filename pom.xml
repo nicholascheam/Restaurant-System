@@ -61,7 +61,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.example.restaurantsystem.HelloApplication</mainClass>
+                    <mainClass>com.example.restaurantsystem.RestaurantApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

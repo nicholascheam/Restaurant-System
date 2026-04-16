@@ -7,6 +7,7 @@ public class MenuItem {
     String description;
     int stock;
     boolean active;
+    String category;
     // getter and setters
     int getId() {
         return id;
@@ -22,6 +23,9 @@ public class MenuItem {
     }
     int getStock() {
         return stock;
+    }
+    String getCategory() {
+        return category;
     }
     void setId(int id) {
         this.id = id;
@@ -40,6 +44,9 @@ public class MenuItem {
     }
     void setActive(boolean active) {
         this.active = active;
+    }
+    void setCategory(String category) {
+        this.category = category;
     }
     // check for availability includes stock availability
     boolean isAvailable() {

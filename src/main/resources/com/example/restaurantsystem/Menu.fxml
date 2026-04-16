@@ -3,25 +3,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.restaurantsystem.MenuController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.restaurantsystem.MenuController">
 
     <top>
         <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="topbar">
             <Label fx:id="userLabel"/>
             <Button fx:id="adminButton" text="Admin Panel" onAction="#goToAdmin"/>
-            <Button text="Logout"
-                    onAction="#handleLogout"/>
+            <Button text="Logout" onAction="#handleLogout"/>
         </HBox>
     </top>
 
     <left>
         <VBox spacing="10" styleClass="sidebar">
             <Label text="Categories"/>
-            <Button text="All"/>
-            <Button text="Burgers"/>
-            <Button text="Drinks"/>
-            <Button text="Desserts"/>
+            <Button text="All" onAction="#showAll"/>
+            <Button text="Burgers" onAction="#showBurgers"/>
+            <Button text="Drinks" onAction="#showDrinks"/>
+            <Button text="Desserts" onAction="#showDesserts"/>
         </VBox>
     </left>
 
@@ -41,8 +39,7 @@
 
     <bottom>
         <HBox alignment="CENTER_RIGHT" styleClass="footer">
-            <Button text="Place Order"
-                    onAction="#handlePlaceOrder"/>
+            <Button text="Place Order" onAction="#handlePlaceOrder"/>
         </HBox>
     </bottom>
 

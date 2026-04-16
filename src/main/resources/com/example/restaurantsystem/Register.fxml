@@ -23,12 +23,9 @@
         <PasswordField fx:id="passwordField"
                        promptText="Password"/>
 
-        <Button text="Register"
-                maxWidth="Infinity"
-                onAction="#handleRegister"/>
+        <Button text="Register" maxWidth="Infinity" onAction="#handleRegister"/>
 
-        <Hyperlink text="Back to Login"
-                   onAction="#goToLogin"/>
+        <Hyperlink text="Back to Login" onAction="#goToLogin"/>
 
     </VBox>
 

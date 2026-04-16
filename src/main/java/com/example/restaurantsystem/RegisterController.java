@@ -12,7 +12,7 @@ public class RegisterController {
     private PasswordField passwordField;
 
     AuthService authService = new AuthService();
-
+    // method for register
     @FXML
     private void handleRegister() {
 
@@ -21,7 +21,7 @@ public class RegisterController {
 
         boolean success =
                 authService.register(username, password, "user");
-
+        // if works, alert pop up saying register successful
         if (success) {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -30,7 +30,7 @@ public class RegisterController {
             alert.showAndWait();
 
             SceneSwitcher.switchScene(usernameField, "Login.fxml");
-
+        // if not error alert
         } else {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -38,5 +38,9 @@ public class RegisterController {
             alert.setContentText("Username already exists.");
             alert.showAndWait();
         }
+    }
+    // go to login page
+    @FXML private void goToLogin() {
+        SceneSwitcher.switchScene(usernameField, "Login.fxml");
     }
 }

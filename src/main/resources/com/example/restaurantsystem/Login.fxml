@@ -4,12 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.example.restaurantsystem.LoginController">
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.restaurantsystem.LoginController">
 
-    <VBox spacing="15" alignment="CENTER"
-          maxWidth="320"
-          styleClass="card">
+    <VBox spacing="15" alignment="CENTER" maxWidth="320" styleClass="card">
 
         <padding>
             <Insets top="25" right="25" bottom="25" left="25"/>
@@ -17,18 +14,13 @@
 
         <Label text="Restaurant System" styleClass="title"/>
 
-        <TextField fx:id="usernameField"
-                   promptText="Username"/>
+        <TextField fx:id="usernameField" promptText="Username"/>
 
-        <PasswordField fx:id="passwordField"
-                       promptText="Password"/>
+        <PasswordField fx:id="passwordField" promptText="Password"/>
 
-        <Button text="Login"
-                maxWidth="Infinity"
-                onAction="#handleLogin"/>
+        <Button text="Login" maxWidth="Infinity" onAction="#handleLogin"/>
 
-        <Hyperlink text="Create an account"
-                   onAction="#goToRegister"/>
+        <Hyperlink text="Create an account" onAction="#goToRegister"/>
 
     </VBox>
 

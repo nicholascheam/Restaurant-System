@@ -1,6 +1,7 @@
 package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -38,24 +39,9 @@ public class MenuController {
         loadMenuItems();
     }
     private List<MenuItem> getMenuItems() {
-        List<MenuItem> list = new ArrayList<>();
-
-        MenuItem m1 = new MenuItem();
-        m1.setId(1);
-        m1.setName("Burger");
-        m1.setPrice(5.0);
-        m1.setStock(10);
-
-        MenuItem m2 = new MenuItem();
-        m2.setId(2);
-        m2.setName("Fries");
-        m2.setPrice(3.0);
-        m2.setStock(10);
-
-        list.add(m1);
-        list.add(m2);
-
-        return list;
+        MenuService menuService = new MenuService();
+        List<MenuItem> items = menuService.getAllItems();
+        return items;
     }
     // retrieve item from menu then put it in a grid
     private void loadMenuItems() {
@@ -83,13 +69,23 @@ public class MenuController {
         Label price = new Label("$" + item.getPrice());
 
         Button addBtn = new Button("Add");
-
+        Label desc = new Label(item.getDescription());
+        desc.setWrapText(true);
         addBtn.setOnAction(e -> {
             order.addItem(item, 1);
             updateCartUI();
         });
 
-        VBox box = new VBox(10, name, price, addBtn);
+        Button infoBtn = new Button("More Info");
+
+        infoBtn.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(item.getName());
+            alert.setHeaderText(item.getName());
+            alert.setContentText(item.getDescription());
+            alert.showAndWait();
+        });
+        VBox box = new VBox(10, name, price, addBtn, infoBtn);
         box.setStyle("-fx-border-color: black; -fx-padding: 10;");
 
         return box;
@@ -119,28 +115,92 @@ public class MenuController {
 
         totalLabel.setText("Total: $" + order.calculateTotal());
     }
-
+    // alert blueprint for use
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+    // "Place Order" button
     @FXML
     private void handlePlaceOrder() {
 
         if (order.getItems().isEmpty()) {
-            System.out.println("Cart is empty");
+            showAlert("Cart is empty.");
             return;
         }
 
         orderService.saveOrder(order);
 
-        System.out.println("Order placed!");
+        showAlert("Order placed successfully!");
 
         order.clear();
         updateCartUI();
     }
+    // "Logout" button
     @FXML
     private void handleLogout() {
         SceneSwitcher.switchScene(menuGrid, "Login.fxml");
     }
+    // "Admin panel" button
     @FXML
     private void goToAdmin() {
-        System.out.println("Admin page coming soon");
+        SceneSwitcher.switchScene(menuGrid, "Admin.fxml");
+    }
+    // method for showing each category
+    private void loadMenuItems(List<MenuItem> items) {
+        menuGrid.getChildren().clear();
+
+        int col = 0;
+        int row = 0;
+
+        if (items.isEmpty()) {
+            Label empty = new Label("No items found.");
+            menuGrid.add(empty, 0, 0);
+            return;
+        }
+        for (MenuItem item : items) {
+            VBox card = createItemCard(item);
+            menuGrid.add(card, col, row);
+
+            col++;
+            if (col == 3) {
+                col = 0;
+                row++;
+            }
+        }
+    }
+    private void loadMenuItemsByCategory(String category) {
+
+        List<MenuItem> filtered = new ArrayList<>();
+
+        for (MenuItem item : getMenuItems()) {
+            if (item.getCategory().equalsIgnoreCase(category)) {
+                filtered.add(item);
+            }
+        }
+
+        loadMenuItems(filtered);
+    }
+    // each method for each button
+    @FXML
+    private void showAll() {
+        loadMenuItems(getMenuItems());
+    }
+
+    @FXML
+    private void showDrinks() {
+        loadMenuItemsByCategory("Drinks");
+    }
+
+    @FXML
+    private void showDesserts() {
+        loadMenuItemsByCategory("Desserts");
+    }
+
+    @FXML
+    private void showBurgers() {
+        loadMenuItemsByCategory("Burgers");
     }
 }

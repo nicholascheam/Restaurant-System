@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" alignment="CENTER"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.restaurantsystem.RegisterController">
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.restaurantsystem.RegisterController">
 
-    <Label text="Register Account"/>
+    <VBox spacing="15" alignment="CENTER"
+          maxWidth="320"
+          styleClass="card">
 
-    <Label text="Username"/>
-    <TextField fx:id="usernameField"/>
+        <padding>
+            <Insets top="25" right="25" bottom="25" left="25"/>
+        </padding>
 
-    <Label text="Password"/>
-    <PasswordField fx:id="passwordField"/>
+        <Label text="Create Account" styleClass="title"/>
 
-    <Button text="Register" onAction="#handleRegister"/>
-    <Button text="Back to Login" onAction="#goToLogin"/>
+        <TextField fx:id="usernameField"
+                   promptText="Username"/>
 
-</VBox>
+        <PasswordField fx:id="passwordField"
+                       promptText="Password"/>
+
+        <Button text="Register"
+                maxWidth="Infinity"
+                onAction="#handleRegister"/>
+
+        <Hyperlink text="Back to Login"
+                   onAction="#goToLogin"/>
+
+    </VBox>
+
+</StackPane>

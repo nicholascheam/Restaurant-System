@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.restaurantsystem.MenuController">
 
-    <!-- TOP BAR -->
-    <HBox spacing="20" alignment="CENTER_RIGHT">
-        <Label fx:id="userLabel"/>
-        <Button text="Cart"/>
-        <Button text="Logout" onAction="#handleLogout"/>
-    </HBox>
+    <top>
+        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="topbar">
+            <Label fx:id="userLabel"/>
+            <Button fx:id="adminButton" text="Admin Panel" onAction="#goToAdmin"/>
+            <Button text="Logout"
+                    onAction="#handleLogout"/>
+        </HBox>
+    </top>
 
-    <!-- MENU -->
+    <left>
+        <VBox spacing="10" styleClass="sidebar">
+            <Label text="Categories"/>
+            <Button text="All"/>
+            <Button text="Burgers"/>
+            <Button text="Drinks"/>
+            <Button text="Desserts"/>
+        </VBox>
+    </left>
+
     <center>
-        <GridPane fx:id="menuGrid" hgap="20" vgap="20"/>
+        <ScrollPane fitToWidth="true">
+            <GridPane fx:id="menuGrid" hgap="20" vgap="20"/>
+        </ScrollPane>
     </center>
 
-    <!-- CART -->
     <right>
-        <VBox spacing="10">
+        <VBox spacing="10" styleClass="cart-panel">
             <Label text="Cart"/>
             <VBox fx:id="cartBox"/>
             <Label fx:id="totalLabel"/>
         </VBox>
     </right>
 
-    <!-- BOTTOM -->
     <bottom>
-        <Button text="Place Order" onAction="#handlePlaceOrder"/>
+        <HBox alignment="CENTER_RIGHT" styleClass="footer">
+            <Button text="Place Order"
+                    onAction="#handlePlaceOrder"/>
+        </HBox>
     </bottom>
 
 </BorderPane>

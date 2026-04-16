@@ -1,15 +1,11 @@
 package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +25,16 @@ public class MenuController {
 
     @FXML
     private Label userLabel;
+    @FXML
+    private Button adminButton;
 
     public void setUser(User user) {
         this.user = user;
         this.order = new Order(user);
 
         userLabel.setText("Hello, " + user.getUsername());
-
+        adminButton.setVisible(user.isAdmin());
+        adminButton.setManaged(user.isAdmin());
         loadMenuItems();
     }
     private List<MenuItem> getMenuItems() {
@@ -87,7 +86,7 @@ public class MenuController {
 
         addBtn.setOnAction(e -> {
             order.addItem(item, 1);
-            System.out.println("Added: " + item.getName());
+            updateCartUI();
         });
 
         VBox box = new VBox(10, name, price, addBtn);
@@ -138,18 +137,10 @@ public class MenuController {
     }
     @FXML
     private void handleLogout() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("Login.fxml")
-            );
-
-            Parent root = loader.load();
-
-            Stage stage = (Stage) menuGrid.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SceneSwitcher.switchScene(menuGrid, "Login.fxml");
+    }
+    @FXML
+    private void goToAdmin() {
+        System.out.println("Admin page coming soon");
     }
 }

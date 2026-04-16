@@ -1,12 +1,47 @@
 .root {
+    -fx-background-color: linear-gradient(to bottom right, #f2f6ff, #dfe9f3);
     -fx-font-family: "Segoe UI";
 }
 
-.button {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 4);
 }
 
-.label {
-    -fx-font-size: 14px;
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-radius: 8;
+    -fx-padding: 8 14 8 14;
+}
+
+.text-field,
+.password-field {
+    -fx-pref-height: 36;
+}
+.topbar {
+    -fx-padding: 15;
+    -fx-background-color: white;
+}
+
+.sidebar {
+    -fx-padding: 15;
+    -fx-background-color: #f5f5f5;
+    -fx-pref-width: 140;
+}
+
+.cart-panel {
+    -fx-padding: 15;
+    -fx-background-color: #fafafa;
+    -fx-pref-width: 220;
+}
+
+.footer {
+    -fx-padding: 15;
 }

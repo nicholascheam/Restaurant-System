@@ -42,7 +42,8 @@
 
             <Button text="Add" onAction="#handleAdd"/>
             <Button text="Update" onAction="#handleUpdate"/>
-            <Button text="Soft Delete" onAction="#handleDelete"/>
+            <Button text="Activate" onAction="#handleActivate"/>
+            <Button text="Deactivate" onAction="#handleDelete"/>
             <Button text="Hard Delete" onAction="#handleHardDelete"/>
 
         </VBox>

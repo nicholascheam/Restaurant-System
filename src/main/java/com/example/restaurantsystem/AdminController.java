@@ -1,11 +1,10 @@
 package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.Optional;
 
 public class AdminController {
     @FXML private TableView<MenuItem> table;
@@ -22,6 +21,10 @@ public class AdminController {
     @FXML private TextArea descField;
     private User currentUser;
     private MenuService menuService = new MenuService();
+    // setter
+    public void setUser(User user) {
+        this.currentUser = user;
+    }
     // refresh table
     private void refreshTable() {
         table.getItems().setAll(menuService.getAllItems());
@@ -61,10 +64,36 @@ public class AdminController {
         MenuController c = SceneSwitcher.switchScene(table, "Menu.fxml");
         c.setUser(currentUser);
     }
+    // clearing fields for adding
+    private void clearForm() {
+        nameField.clear();
+        priceField.clear();
+        stockField.clear();
+        categoryField.clear();
+        descField.clear();
+    }
     // add button
     @FXML
     private void handleAdd() {
-        System.out.println("Add clicked");
+
+        MenuItem item = new MenuItem();
+
+        item.setName(nameField.getText());
+        item.setPrice(Double.parseDouble(priceField.getText()));
+        item.setStock(Integer.parseInt(stockField.getText()));
+        item.setCategory(categoryField.getText());
+        item.setDescription(descField.getText());
+        item.setActive(true);
+
+        boolean success = menuService.addItem(item);
+
+        if (success) {
+            refreshTable();
+            clearForm();
+            System.out.println("Added");
+        } else {
+            System.out.println("Add failed");
+        }
     }
     // update button
     @FXML
@@ -96,11 +125,65 @@ public class AdminController {
     // soft delete button
     @FXML
     private void handleDelete() {
-        System.out.println("Soft delete clicked");
+
+        MenuItem selected = table.getSelectionModel().getSelectedItem();
+
+        if (selected == null) return;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Deactivation");
+        alert.setHeaderText("Deactivate this item?");
+        alert.setContentText(selected.getName());
+
+        Optional<ButtonType> result = alert.showAndWait();
+        
+        boolean success = menuService.deleteItem(selected.getId());
+
+        if (success) {
+            refreshTable();
+            clearForm();
+        }
     }
     // hard delete button
     @FXML
     private void handleHardDelete() {
-        System.out.println("Hard delete clicked");
+
+        MenuItem selected = table.getSelectionModel().getSelectedItem();
+
+        if (selected == null) return;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText("Delete permanently?");
+        alert.setContentText(selected.getName());
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+
+            boolean success = menuService.hardDeleteItem(selected.getId());
+
+            if (success) {
+                refreshTable();
+                clearForm();
+            }
+        }
+    }
+    // item active button
+    @FXML
+    private void handleActivate() {
+
+        MenuItem selected = table.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            return;
+        }
+
+        boolean success = menuService.activateItem(selected.getId());
+
+        if (success) {
+            refreshTable();
+            clearForm();
+        }
     }
 }

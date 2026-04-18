@@ -146,7 +146,8 @@ public class MenuController {
     // "Admin panel" button
     @FXML
     private void goToAdmin() {
-        SceneSwitcher.switchScene(menuGrid, "Admin.fxml");
+        AdminController c = SceneSwitcher.switchScene(menuGrid, "Admin.fxml");
+        c.setUser(user);
     }
     // method for showing each category
     private void loadMenuItems(List<MenuItem> items) {

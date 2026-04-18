@@ -35,6 +35,7 @@ public class MenuService {
                 item.setDescription(rs.getString("description"));
                 item.setStock(rs.getInt("stock"));
                 item.setCategory(rs.getString("category"));
+                item.setActive(rs.getBoolean("active"));
 
                 list.add(item);
             }
@@ -210,5 +211,54 @@ public class MenuService {
         }
 
         return false;
+    }
+    // hard delete method
+    public boolean hardDeleteItem(int id) {
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            String sql = "DELETE FROM menu_items WHERE id=?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, id);
+
+            ps.executeUpdate();
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    // make item active method
+    public boolean activateItem(int id) {
+        String sql = "UPDATE menu_items SET active = 1 WHERE id = ?";
+
+        try (
+                Connection conn = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/restaurant_db",
+                        "root",
+                        ""
+                );
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

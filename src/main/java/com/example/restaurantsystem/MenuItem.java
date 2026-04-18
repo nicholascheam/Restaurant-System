@@ -9,23 +9,26 @@ public class MenuItem {
     boolean active;
     String category;
     // getter and setters
-    int getId() {
+    public int getId() {
         return id;
     }
-    String getName() {
+    public String getName() {
         return name;
     }
-    double getPrice() {
+    public double getPrice() {
         return price;
     }
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
-    int getStock() {
+    public int getStock() {
         return stock;
     }
-    String getCategory() {
+    public String getCategory() {
         return category;
+    }
+    public boolean isActive() {
+        return active;
     }
     void setId(int id) {
         this.id = id;

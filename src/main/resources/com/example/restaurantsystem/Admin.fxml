@@ -1,14 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.restaurantsystem.AdminController">
 
-</AnchorPane>
+    <!-- TOP -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Admin Panel"/>
+            <Button text="Back" onAction="#goBack"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+        <TableView fx:id="table">
+
+            <columns>
+                <TableColumn fx:id="idCol" text="ID"/>
+                <TableColumn fx:id="nameCol" text="Name"/>
+                <TableColumn fx:id="priceCol" text="Price"/>
+                <TableColumn fx:id="stockCol" text="Stock"/>
+                <TableColumn fx:id="categoryCol" text="Category"/>
+                <TableColumn fx:id="activeCol" text="Active"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+    <!-- RIGHT -->
+    <right>
+        <VBox spacing="10">
+
+            <TextField fx:id="nameField" promptText="Name"/>
+            <TextField fx:id="priceField" promptText="Price"/>
+            <TextField fx:id="stockField" promptText="Stock"/>
+            <TextField fx:id="categoryField" promptText="Category"/>
+            <TextArea fx:id="descField" promptText="Description"/>
+
+            <Button text="Add" onAction="#handleAdd"/>
+            <Button text="Update" onAction="#handleUpdate"/>
+            <Button text="Soft Delete" onAction="#handleDelete"/>
+            <Button text="Hard Delete" onAction="#handleHardDelete"/>
+
+        </VBox>
+    </right>
+
+</BorderPane>

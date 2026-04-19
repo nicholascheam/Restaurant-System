@@ -65,11 +65,9 @@ public class AdminController {
                 if (empty || item == null) {
                     setStyle("");
                 } else if (!item.isActive()) {
-                    setStyle(
-                            "-fx-background-color: #dddddd;" +
-                                    "-fx-text-fill: gray;" +
-                                    "-fx-opacity: 0.65;"
-                    );
+                    setStyle("-fx-background-color: lightgray;");
+                } else if (item.getStock() == 0) {
+                    setStyle("-fx-background-color: #ffcc80;");
                 } else {
                     setStyle("");
                 }

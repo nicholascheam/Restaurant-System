@@ -59,4 +59,95 @@ public class OrderService {
             }
         }
     }
+    // place order
+    public boolean placeOrder(Order order) {
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            conn.setAutoCommit(false);
+
+            // check stock
+            for (OrderItem oi : order.getItems()) {
+
+                String checkSql = "SELECT stock FROM menu_items WHERE id = ?";
+
+                PreparedStatement checkPs = conn.prepareStatement(checkSql);
+
+                checkPs.setInt(1, oi.getMenuItem().getId());
+
+                ResultSet rs = checkPs.executeQuery();
+
+                if (rs.next()) {
+
+                    int stock = rs.getInt("stock");
+
+                    if (stock < oi.getQuantity()) {
+                        conn.rollback();
+                        conn.close();
+                        return false;
+                    }
+                }
+            }
+
+            // insert order
+            String orderSql =
+                    "INSERT INTO orders(user_id, total) VALUES (?, ?)";
+
+            PreparedStatement orderPs = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
+
+            orderPs.setInt(1, order.getUser().getId());
+
+            orderPs.setDouble(2, order.calculateTotal());
+
+            orderPs.executeUpdate();
+
+            ResultSet keys = orderPs.getGeneratedKeys();
+
+            keys.next();
+
+            int orderId = keys.getInt(1);
+
+            // insert order items then deduct stock
+            for (OrderItem oi : order.getItems()) {
+
+                String itemSql =
+                        "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price) " + "VALUES (?, ?, ?, ?)";
+
+                PreparedStatement itemPs = conn.prepareStatement(itemSql);
+
+                itemPs.setInt(1, orderId);
+                itemPs.setInt(2, oi.getMenuItem().getId());
+                itemPs.setInt(3, oi.getQuantity());
+                itemPs.setDouble(4, oi.getPriceAtPurchase());
+
+                itemPs.executeUpdate();
+
+                String deductSql =
+                        "UPDATE menu_items " + "SET stock = stock - ? " + "WHERE id = ?";
+
+                PreparedStatement deductPs = conn.prepareStatement(deductSql);
+
+                deductPs.setInt(1, oi.getQuantity());
+
+                deductPs.setInt(2, oi.getMenuItem().getId());
+
+                deductPs.executeUpdate();
+            }
+
+            conn.commit();
+            conn.close();
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

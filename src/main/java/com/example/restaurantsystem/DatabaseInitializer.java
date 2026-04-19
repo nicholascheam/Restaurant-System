@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class DatabaseInitializer {
-
+    // connect to mysql then create table
     public static void initialize() {
 
         try {
@@ -25,12 +25,14 @@ public class DatabaseInitializer {
             conn.close();
 
             createTables();
+            seedAdmin();
+            seedMenuItems();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    // create table
     private static void createTables() {
 
         try {
@@ -80,6 +82,88 @@ public class DatabaseInitializer {
                     price DOUBLE
                 )
             """);
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // default user 1
+    private static void seedAdmin() {
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            Statement stmt = conn.createStatement();
+
+            stmt.executeUpdate("""
+            INSERT INTO users (username, password, role)
+            SELECT 'admin', 'admin123', 'admin'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM users WHERE username = 'admin'
+            )
+        """);
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // default menu item when load in
+    private static void seedMenuItems() {
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            Statement stmt = conn.createStatement();
+
+            stmt.executeUpdate("""
+            INSERT INTO menu_items
+            (name, price, description, stock, category, active)
+
+            SELECT 'Burger', 8.50,
+                   'Classic beef burger',
+                   20, 'Burgers', true
+            WHERE NOT EXISTS (
+                SELECT 1 FROM menu_items WHERE name='Burger'
+            )
+        """);
+
+            stmt.executeUpdate("""
+            INSERT INTO menu_items
+            (name, price, description, stock, category, active)
+
+            SELECT 'Fries', 4.00,
+                   'Crispy french fries',
+                   30, 'Sides', true
+            WHERE NOT EXISTS (
+                SELECT 1 FROM menu_items WHERE name='Fries'
+            )
+        """);
+
+            stmt.executeUpdate("""
+            INSERT INTO menu_items
+            (name, price, description, stock, category, active)
+
+            SELECT 'Coke', 3.00,
+                   'Cold soft drink',
+                   25, 'Drinks', true
+            WHERE NOT EXISTS (
+                SELECT 1 FROM menu_items WHERE name='Coke'
+            )
+        """);
 
             stmt.close();
             conn.close();

@@ -83,6 +83,41 @@ public class MenuService {
 
         return list;
     }
+    // get the category
+    public List<String> getCategories() {
+
+        List<String> categories = new ArrayList<>();
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            String sql =
+                    "SELECT DISTINCT category " + "FROM menu_items " +
+                    "WHERE active = true " + "AND stock > 0 " + "ORDER BY category";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                categories.add(rs.getString("category")
+                );
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return categories;
+    }
     // get the items by category
     public List<MenuItem> getByCategory(String category) {
 

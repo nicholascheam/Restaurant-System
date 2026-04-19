@@ -23,11 +23,13 @@ public class MenuController {
     private User user;
     private Order order;
     private OrderService orderService = new OrderService();
-
+    private MenuService menuService = new MenuService();
     @FXML
     private Label userLabel;
     @FXML
     private Button adminButton;
+    @FXML
+    private VBox categoryBox;
 
     public void setUser(User user) {
         this.user = user;
@@ -36,7 +38,34 @@ public class MenuController {
         userLabel.setText("Hello, " + user.getUsername());
         adminButton.setVisible(user.isAdmin());
         adminButton.setManaged(user.isAdmin());
+        loadCategories();
         loadMenuItems();
+    }
+    // loading categories
+    private void loadCategories() {
+
+        categoryBox.getChildren().clear();
+
+        categoryBox.getChildren().add(
+                new Label("Categories")
+        );
+
+        Button allBtn = new Button("All");
+        allBtn.setOnAction(e -> loadMenuItems());
+        categoryBox.getChildren().add(allBtn);
+
+        for (String cat : menuService.getCategories()) {
+
+            Button btn = new Button(cat);
+
+            btn.setMaxWidth(Double.MAX_VALUE);
+
+            btn.setOnAction(e ->
+                    loadMenuItemsByCategory(cat)
+            );
+
+            categoryBox.getChildren().add(btn);
+        }
     }
     private List<MenuItem> getMenuItems() {
         MenuService menuService = new MenuService();
@@ -131,7 +160,16 @@ public class MenuController {
             return;
         }
 
-        orderService.saveOrder(order);
+        boolean success = orderService.placeOrder(order);
+
+        if (success) {
+            showAlert("Order placed!");
+            order.clear();
+            updateCartUI();
+            loadMenuItems();
+        } else {
+            showAlert("Not enough stock.");
+        }
 
         showAlert("Order placed successfully!");
 

@@ -14,12 +14,10 @@
     </top>
 
     <left>
-        <VBox spacing="10" styleClass="sidebar">
+        <VBox fx:id="categoryBox"
+              spacing="10"
+              styleClass="sidebar">
             <Label text="Categories"/>
-            <Button text="All" onAction="#showAll"/>
-            <Button text="Burgers" onAction="#showBurgers"/>
-            <Button text="Drinks" onAction="#showDrinks"/>
-            <Button text="Desserts" onAction="#showDesserts"/>
         </VBox>
     </left>
 

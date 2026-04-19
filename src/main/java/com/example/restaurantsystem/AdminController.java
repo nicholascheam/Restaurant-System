@@ -56,6 +56,25 @@ public class AdminController {
                     }
                 }
         );
+        // graying out when not active
+        table.setRowFactory(tv -> new TableRow<MenuItem>() {
+            @Override
+            protected void updateItem(MenuItem item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setStyle("");
+                } else if (!item.isActive()) {
+                    setStyle(
+                            "-fx-background-color: #dddddd;" +
+                                    "-fx-text-fill: gray;" +
+                                    "-fx-opacity: 0.65;"
+                    );
+                } else {
+                    setStyle("");
+                }
+            }
+        });
         refreshTable();
     }
     // back button
@@ -136,12 +155,14 @@ public class AdminController {
         alert.setContentText(selected.getName());
 
         Optional<ButtonType> result = alert.showAndWait();
-        
-        boolean success = menuService.deleteItem(selected.getId());
 
-        if (success) {
-            refreshTable();
-            clearForm();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean success = menuService.deleteItem(selected.getId());
+
+            if (success) {
+                refreshTable();
+                clearForm();
+            }
         }
     }
     // hard delete button

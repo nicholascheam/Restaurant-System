@@ -11,6 +11,7 @@ import java.io.IOException;
 public class RestaurantApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        DatabaseInitializer.initialize();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root, 450, 350);

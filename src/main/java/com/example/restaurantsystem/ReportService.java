@@ -17,7 +17,7 @@ public class ReportService {
             );
 
             String sql =
-                    "SELECT IFNULL(SUM(total),0) " + "FROM orders WHERE DATE(order_date)=CURDATE()";
+                    "SELECT IFNULL(SUM(total),0) " + "FROM orders WHERE DATE(order_time)=CURDATE()";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -41,7 +41,7 @@ public class ReportService {
             );
 
             String sql =
-                    "SELECT COUNT(*) FROM orders WHERE DATE(order_date)=CURDATE()";
+                    "SELECT COUNT(*) FROM orders WHERE DATE(order_time)=CURDATE()";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -65,9 +65,9 @@ public class ReportService {
             );
 
             String sql =
-                    "SELECT m.name, SUM(oi.quantity) qty " + "FROM order_items oi " +
+                    "SELECT m.name AS menu_name, SUM(oi.quantity) qty " + "FROM order_items oi " +
                     "JOIN menu_items m ON oi.menu_item_id = m.id " + "GROUP BY m.name " +
-                    "ORDER BY qty DESC " + "LIMIT 1";
+                    "ORDER BY qty DESC LIMIT 1";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

@@ -9,9 +9,13 @@ public class DashboardController {
     @FXML private Label ordersLabel;
     @FXML private Label bestSellerLabel;
     @FXML private Label lowStockLabel;
-
+    private User currentUser;
     private ReportService reportService = new ReportService();
 
+    // handing over user details
+    public void setUser(User user) {
+        this.currentUser = user;
+    }
     @FXML
     public void initialize() {
 

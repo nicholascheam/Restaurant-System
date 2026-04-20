@@ -230,6 +230,7 @@ public class AdminController {
     // to go dashboard (charts)
     @FXML
     private void goDashboard() {
-        SceneSwitcher.switchScene(table, "Dashboard.fxml");
+        DashboardController c = SceneSwitcher.switchScene(table, "Dashboard.fxml");
+        c.setUser(currentUser);
     }
 }

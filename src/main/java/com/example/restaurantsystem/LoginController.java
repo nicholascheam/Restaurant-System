@@ -32,10 +32,7 @@ public class LoginController {
             }
 
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid username or password.");
-            alert.showAndWait();
+            AlertUtil.error("Invalid username or password.");
         }
     }
     // register page

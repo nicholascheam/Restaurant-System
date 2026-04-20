@@ -19,6 +19,7 @@ public class AdminController {
     @FXML private TextField stockField;
     @FXML private TextField categoryField;
     @FXML private TextArea descField;
+    @FXML private Label statusLabel;
     private User currentUser;
     private MenuService menuService = new MenuService();
     // setter
@@ -113,9 +114,9 @@ public class AdminController {
         if (success) {
             refreshTable();
             clearForm();
-            System.out.println("Added");
+            setStatus("Added successfully.", "green");
         } else {
-            System.out.println("Add failed");
+            setStatus("Add failed.", "red");
         }
     }
     // update button
@@ -126,7 +127,7 @@ public class AdminController {
                 table.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            System.out.println("Select an item first");
+            setStatus("Select an item first.", "orange");
             return;
         }
 
@@ -140,9 +141,9 @@ public class AdminController {
 
         if (success) {
             refreshTable();
-            System.out.println("Updated");
+            setStatus("Updated successfully.", "green");
         } else {
-            System.out.println("Update failed");
+            setStatus("Update failed.", "red");
         }
     }
     // soft delete button
@@ -151,7 +152,10 @@ public class AdminController {
 
         MenuItem selected = table.getSelectionModel().getSelectedItem();
 
-        if (selected == null) return;
+        if (selected == null) {
+            setStatus("Select an item first.", "orange");
+            return;
+        }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Deactivation");
@@ -166,6 +170,7 @@ public class AdminController {
             if (success) {
                 refreshTable();
                 clearForm();
+                setStatus("Deleted successfully.", "green");
             }
         }
     }
@@ -175,7 +180,10 @@ public class AdminController {
 
         MenuItem selected = table.getSelectionModel().getSelectedItem();
 
-        if (selected == null) return;
+        if (selected == null) {
+            setStatus("Select an item first.", "orange");
+            return;
+        }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Delete");
@@ -191,6 +199,7 @@ public class AdminController {
             if (success) {
                 refreshTable();
                 clearForm();
+                setStatus("Completely deleted successfully.", "green");
             }
         }
     }
@@ -201,6 +210,7 @@ public class AdminController {
         MenuItem selected = table.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
+            setStatus("Select an item first.", "orange");
             return;
         }
 
@@ -209,6 +219,17 @@ public class AdminController {
         if (success) {
             refreshTable();
             clearForm();
+            setStatus("Activated successfully.", "green");
         }
+    }
+    // label confirmation
+    private void setStatus(String msg, String color) {
+        statusLabel.setText(msg);
+        statusLabel.setStyle("-fx-text-fill: " + color + ";");
+    }
+    // to go dashboard (charts)
+    @FXML
+    private void goDashboard() {
+        SceneSwitcher.switchScene(table, "Dashboard.fxml");
     }
 }

@@ -69,7 +69,8 @@ public class DatabaseInitializer {
                 CREATE TABLE IF NOT EXISTS orders (
                     id INT PRIMARY KEY AUTO_INCREMENT,
                     user_id INT,
-                    total DOUBLE
+                    total DOUBLE,
+                    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """);
 

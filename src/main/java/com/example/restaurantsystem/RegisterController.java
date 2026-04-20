@@ -24,19 +24,13 @@ public class RegisterController {
         // if works, alert pop up saying register successful
         if (success) {
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Registration successful!");
-            alert.showAndWait();
+            AlertUtil.info("Registration successful!");
 
             SceneSwitcher.switchScene(usernameField, "Login.fxml");
         // if not error alert
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Username already exists.");
-            alert.showAndWait();
+            AlertUtil.error("Username already exists.");
         }
     }
     // go to login page

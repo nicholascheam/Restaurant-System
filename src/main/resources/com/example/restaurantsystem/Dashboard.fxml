@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.restaurantsystem.DashboardController">
+
+    <Label text="Restaurant Dashboard"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="20" vgap="20">
+
+        <Label text="Revenue Today:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="revenueLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Orders Today:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="ordersLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Best Seller:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="bestSellerLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Low Stock Items:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="lowStockLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+    <Button text="Back" onAction="#goBack"/>
+
+</VBox>

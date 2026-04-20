@@ -165,34 +165,27 @@ public class MenuController {
 
         totalLabel.setText("Total: $" + order.calculateTotal());
     }
-    // alert blueprint for use
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
-    }
     // "Place Order" button
     @FXML
     private void handlePlaceOrder() {
 
         if (order.getItems().isEmpty()) {
-            showAlert("Cart is empty.");
+            AlertUtil.info("Cart is empty.");
             return;
         }
 
         boolean success = orderService.placeOrder(order);
 
         if (success) {
-            showAlert("Order placed!");
+            AlertUtil.info("Order placed!");
             order.clear();
             updateCartUI();
             loadMenuItems();
         } else {
-            showAlert("Not enough stock.");
+            AlertUtil.info("Not enough stock.");
         }
 
-        showAlert("Order placed successfully!");
+        AlertUtil.info("Order placed successfully!");
 
         order.clear();
         updateCartUI();

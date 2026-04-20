@@ -56,7 +56,7 @@ public class AdminController {
                     }
                 }
         );
-        // graying out when not active
+        // graying out when not active, orange when no item
         table.setRowFactory(tv -> new TableRow<MenuItem>() {
             @Override
             protected void updateItem(MenuItem item, boolean empty) {
@@ -64,11 +64,17 @@ public class AdminController {
 
                 if (empty || item == null) {
                     setStyle("");
-                } else if (!item.isActive()) {
-                    setStyle("-fx-background-color: lightgray;");
-                } else if (item.getStock() == 0) {
+                }
+                else if (!item.isActive() && item.getStock() == 0) {
+                    setStyle("-fx-background-color: #d6b3b3;");
+                }
+                else if (!item.isActive()) {
+                    setStyle("-fx-background-color: #cfcfcf;");
+                }
+                else if (item.getStock() == 0) {
                     setStyle("-fx-background-color: #ffcc80;");
-                } else {
+                }
+                else {
                     setStyle("");
                 }
             }

@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MenuService {
     // get all the individual food items from db
@@ -156,6 +158,48 @@ public class MenuService {
         }
 
         return list;
+    }
+    // count the number of things in category
+    public Map<String, Integer> getCategoryCounts() {
+
+        Map<String, Integer> map = new HashMap<>();
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/restaurant_db",
+                    "root",
+                    ""
+            );
+
+            String sql = "SELECT category, active, stock FROM menu_items";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                String category = rs.getString("category");
+                boolean active = rs.getBoolean("active");
+                int stock = rs.getInt("stock");
+
+                if (!map.containsKey(category)) {
+                    map.put(category, 0);
+                }
+
+                if (active && stock > 0) {
+                    map.put(category, map.get(category) + 1);
+                }
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
     // add items to db
     public boolean addItem(MenuItem item) {

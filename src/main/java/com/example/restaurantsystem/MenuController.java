@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MenuController {
 
@@ -46,23 +47,42 @@ public class MenuController {
 
         categoryBox.getChildren().clear();
 
-        categoryBox.getChildren().add(
-                new Label("Categories")
-        );
+        categoryBox.getChildren().add(new Label("Categories"));
 
         Button allBtn = new Button("All");
+        allBtn.setMaxWidth(Double.MAX_VALUE);
         allBtn.setOnAction(e -> loadMenuItems());
+
         categoryBox.getChildren().add(allBtn);
 
-        for (String cat : menuService.getCategories()) {
+        Map<String, Integer> counts = menuService.getCategoryCounts();
 
-            Button btn = new Button(cat);
+        List<String> categories = new ArrayList<>(counts.keySet());
+
+        categories.sort((a, b) -> {
+
+            int countA = counts.get(a);
+            int countB = counts.get(b);
+
+            if (countA == 0 && countB > 0) return 1;
+            if (countA > 0 && countB == 0) return -1;
+
+            return a.compareToIgnoreCase(b);
+        });
+
+        for (String cat : categories) {
+
+            int count = counts.get(cat);
+
+            Button btn = new Button(cat + " (" + count + ")");
 
             btn.setMaxWidth(Double.MAX_VALUE);
 
-            btn.setOnAction(e ->
-                    loadMenuItemsByCategory(cat)
-            );
+            if (count == 0) {
+                btn.setDisable(true);
+            } else {
+                btn.setOnAction(e -> loadMenuItemsByCategory(cat));
+            }
 
             categoryBox.getChildren().add(btn);
         }
@@ -74,6 +94,7 @@ public class MenuController {
     }
     // retrieve item from menu then put it in a grid
     private void loadMenuItems() {
+        menuGrid.getChildren().clear();
         List<MenuItem> items = getMenuItems(); // pretend from DB
 
         int col = 0;
@@ -211,7 +232,7 @@ public class MenuController {
         }
     }
     private void loadMenuItemsByCategory(String category) {
-
+        menuGrid.getChildren().clear();
         List<MenuItem> filtered = new ArrayList<>();
 
         for (MenuItem item : getMenuItems()) {

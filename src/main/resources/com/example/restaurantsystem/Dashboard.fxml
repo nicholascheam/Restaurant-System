@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.restaurantsystem.DashboardController">
+<VBox spacing="15" alignment="TOP_CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.restaurantsystem.DashboardController"
+      style="-fx-padding: 20;">
 
     <Label text="Restaurant Dashboard"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
 
-    <GridPane hgap="20" vgap="20">
+    <GridPane hgap="20" vgap="15">
 
         <Label text="Revenue Today:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <Label fx:id="revenueLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -27,6 +27,24 @@
         <Label fx:id="lowStockLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
     </GridPane>
+
+    <HBox spacing="20">
+
+        <PieChart fx:id="categoryChart" title="Menu Stock by Category" prefWidth="350" prefHeight="300"/>
+
+        <BarChart fx:id="ordersChart" title="Orders Last 7 Days" prefWidth="400" prefHeight="300">
+
+            <xAxis>
+                <CategoryAxis />
+            </xAxis>
+
+            <yAxis>
+                <NumberAxis />
+            </yAxis>
+
+        </BarChart>
+
+    </HBox>
 
     <Button text="Back" onAction="#goBack"/>
 

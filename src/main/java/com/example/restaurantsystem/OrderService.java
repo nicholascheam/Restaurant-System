@@ -16,7 +16,7 @@ public class OrderService {
             conn.setAutoCommit(false);
 
             // insert order
-            String orderSql = "INSERT INTO orders (user_id, datetime) VALUES (?, ?)";
+            String orderSql = "INSERT INTO orders (user_id, order_datetime) VALUES (?, ?)";
             PreparedStatement orderPs = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
 
             orderPs.setInt(1, order.getUser().getId());
@@ -116,7 +116,8 @@ public class OrderService {
             for (OrderItem oi : order.getItems()) {
 
                 String itemSql =
-                        "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price) " + "VALUES (?, ?, ?, ?)";
+                        "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price_at_purchase, subtotal) " +
+                        "VALUES (?, ?, ?, ?, ?)";
 
                 PreparedStatement itemPs = conn.prepareStatement(itemSql);
 
@@ -124,6 +125,7 @@ public class OrderService {
                 itemPs.setInt(2, oi.getMenuItem().getId());
                 itemPs.setInt(3, oi.getQuantity());
                 itemPs.setDouble(4, oi.getPriceAtPurchase());
+                itemPs.setDouble(5, oi.getPriceAtPurchase() * oi.getQuantity());
 
                 itemPs.executeUpdate();
 

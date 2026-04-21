@@ -1,7 +1,6 @@
 package com.example.restaurantsystem;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -16,11 +15,7 @@ public class MenuService {
         List<MenuItem> list = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "SELECT * FROM menu_items";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -54,11 +49,7 @@ public class MenuService {
         List<MenuItem> list = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "SELECT * FROM menu_items WHERE active = true";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -91,11 +82,7 @@ public class MenuService {
         List<String> categories = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT DISTINCT category " + "FROM menu_items " +
@@ -126,11 +113,7 @@ public class MenuService {
         List<MenuItem> list = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "SELECT * FROM menu_items WHERE category = ? AND active = true";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -165,12 +148,7 @@ public class MenuService {
         Map<String, Integer> map = new HashMap<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
-
+            Connection conn = DBConnection.getConnection();
             String sql = "SELECT category, active, stock FROM menu_items";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -205,11 +183,7 @@ public class MenuService {
     public boolean addItem(MenuItem item) {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "INSERT INTO menu_items (name, price, description, stock, category, active) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -235,11 +209,7 @@ public class MenuService {
     public boolean updateItem(MenuItem item) {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "UPDATE menu_items " +
@@ -270,11 +240,7 @@ public class MenuService {
     public boolean deleteItem(int id) {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "UPDATE menu_items SET active = false WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -295,11 +261,7 @@ public class MenuService {
     public boolean hardDeleteItem(int id) {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql = "DELETE FROM menu_items WHERE id=?";
 
@@ -322,11 +284,7 @@ public class MenuService {
         String sql = "UPDATE menu_items SET active = 1 WHERE id = ?";
 
         try (
-                Connection conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/restaurant_db",
-                        "root",
-                        ""
-                );
+                Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             ps.setInt(1, id);

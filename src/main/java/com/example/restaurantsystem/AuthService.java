@@ -1,7 +1,6 @@
 package com.example.restaurantsystem;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -13,11 +12,7 @@ public class AuthService {
         // try catch so code doesnt throw error immediately on wrong input
         try {
             // connect to database
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
             // sql string for sql query
             String sql = "SELECT * FROM users WHERE username = ?";
             // prepared statement to prevent sql injection attacks
@@ -54,12 +49,7 @@ public class AuthService {
     boolean register(String username, String password, String role) {
         try {
             // connect to db
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
-
+            Connection conn = DBConnection.getConnection();
             // check for user existence
             String checkSql = "SELECT id FROM users WHERE username = ?";
             PreparedStatement checkPs = conn.prepareStatement(checkSql);

@@ -1,7 +1,6 @@
 package com.example.restaurantsystem;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class DatabaseInitializer {
@@ -9,11 +8,7 @@ public class DatabaseInitializer {
     public static void initialize() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             Statement stmt = conn.createStatement();
 
@@ -36,11 +31,7 @@ public class DatabaseInitializer {
     private static void createTables() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             Statement stmt = conn.createStatement();
 
@@ -94,6 +85,17 @@ public class DatabaseInitializer {
             )
         """);
 
+            stmt.executeUpdate("""
+            CREATE TABLE IF NOT EXISTS item_options (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                menu_item_id INT NOT NULL,
+                option_name VARCHAR(50),
+                option_values VARCHAR(255),
+                control_type VARCHAR(20),
+                required BOOLEAN DEFAULT FALSE
+            )
+        """);
+
             stmt.close();
             conn.close();
 
@@ -105,11 +107,7 @@ public class DatabaseInitializer {
     private static void seedAdmin() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             Statement stmt = conn.createStatement();
 
@@ -132,11 +130,7 @@ public class DatabaseInitializer {
     private static void seedMenuItems() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             Statement stmt = conn.createStatement();
 

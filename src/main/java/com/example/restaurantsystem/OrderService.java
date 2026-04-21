@@ -1,145 +1,31 @@
 package com.example.restaurantsystem;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class OrderService {
-    Connection conn = null;
-    void saveOrder(Order order) {
-        try {
-            // connect to db
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
-            // make sure to not immediately do sql command before finishing order
-            conn.setAutoCommit(false);
 
-            // insert order
-            String orderSql = "INSERT INTO orders (user_id, order_datetime) VALUES (?, ?)";
-            PreparedStatement orderPs = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
-
-            orderPs.setInt(1, order.getUser().getId());
-            orderPs.setObject(2, order.getDateTime());
-
-            orderPs.executeUpdate();
-
-            // get unique session order id separated from orderid
-            ResultSet rs = orderPs.getGeneratedKeys();
-
-            int orderId = 0;
-            if (rs.next()) {
-                orderId = rs.getInt(1);
-            }
-            if (orderId == 0) {
-                throw new RuntimeException("Failed to create order");
-            }
-            // insert order items
-            String itemSql = "INSERT INTO order_items (order_id, menu_item_id, quantity, price_at_purchase) VALUES (?, ?, ?, ?)";
-            PreparedStatement itemPs = conn.prepareStatement(itemSql);
-
-            for (OrderItem oi : order.getItems()) {
-                itemPs.setInt(1, orderId);
-                itemPs.setInt(2, oi.getMenuItemId());
-                itemPs.setInt(3, oi.getQuantity());
-                itemPs.setDouble(4, oi.getPriceAtPurchase()); // priceAtPurchase
-
-                itemPs.executeUpdate();
-            }
-
-            // finally do sql queries
-            conn.commit();
-        // if anything breaks throw exception, but try to rollback before making final exception again
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                conn.rollback();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+    private Connection conn;
     // place order
     public boolean placeOrder(Order order) {
 
-        try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+        if (!isValidOrder(order)) return false;
 
+        try {
+            conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
 
-            // check stock
-            for (OrderItem oi : order.getItems()) {
-
-                String checkSql = "SELECT stock FROM menu_items WHERE id = ?";
-
-                PreparedStatement checkPs = conn.prepareStatement(checkSql);
-
-                checkPs.setInt(1, oi.getMenuItem().getId());
-
-                ResultSet rs = checkPs.executeQuery();
-
-                if (rs.next()) {
-
-                    int stock = rs.getInt("stock");
-
-                    if (stock < oi.getQuantity()) {
-                        conn.rollback();
-                        conn.close();
-                        return false;
-                    }
-                }
+            if (!checkStock(order)) {
+                conn.rollback();
+                return false;
             }
 
-            // insert order
-            String orderSql =
-                    "INSERT INTO orders(user_id, total) VALUES (?, ?)";
+            int orderId = insertOrder(order);
+            insertOrderItems(orderId, order);
 
-            PreparedStatement orderPs = conn.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
-
-            orderPs.setInt(1, order.getUser().getId());
-
-            orderPs.setDouble(2, order.calculateTotal());
-
-            orderPs.executeUpdate();
-
-            ResultSet keys = orderPs.getGeneratedKeys();
-
-            keys.next();
-
-            int orderId = keys.getInt(1);
-
-            // insert order items then deduct stock
-            for (OrderItem oi : order.getItems()) {
-
-                String itemSql =
-                        "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price_at_purchase, subtotal) " +
-                        "VALUES (?, ?, ?, ?, ?)";
-
-                PreparedStatement itemPs = conn.prepareStatement(itemSql);
-
-                itemPs.setInt(1, orderId);
-                itemPs.setInt(2, oi.getMenuItem().getId());
-                itemPs.setInt(3, oi.getQuantity());
-                itemPs.setDouble(4, oi.getPriceAtPurchase());
-                itemPs.setDouble(5, oi.getPriceAtPurchase() * oi.getQuantity());
-
-                itemPs.executeUpdate();
-
-                String deductSql =
-                        "UPDATE menu_items " + "SET stock = stock - ? " + "WHERE id = ?";
-
-                PreparedStatement deductPs = conn.prepareStatement(deductSql);
-
-                deductPs.setInt(1, oi.getQuantity());
-
-                deductPs.setInt(2, oi.getMenuItem().getId());
-
-                deductPs.executeUpdate();
-            }
+            deductStocks(order);
 
             conn.commit();
             conn.close();
@@ -148,8 +34,150 @@ public class OrderService {
 
         } catch (Exception e) {
             e.printStackTrace();
+            rollback();
         }
 
         return false;
+    }
+
+    // validate order
+    private boolean isValidOrder(Order order) {
+
+        if (order == null) return false;
+        if (order.getUser() == null) return false;
+        if (order.getItems() == null) return false;
+        if (order.getItems().isEmpty()) return false;
+
+        for (OrderItem oi : order.getItems()) {
+            if (oi.getQuantity() <= 0) return false;
+        }
+
+        return true;
+    }
+
+    // check stock first
+    private boolean checkStock(Order order) {
+
+        try {
+            for (OrderItem oi : order.getItems()) {
+
+                String sql =
+                        "SELECT stock FROM menu_items WHERE id = ?";
+
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setInt(1, oi.getMenuItem().getId());
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+
+                    int stock = rs.getInt("stock");
+
+                    if (stock < oi.getQuantity()) {
+                        return false;
+                    }
+
+                } else {
+                    return false;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    // insert parent order row
+    private int insertOrder(Order order) {
+
+        try {
+            String sql =
+                    "INSERT INTO orders (user_id, total) VALUES (?, ?)";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, order.getUser().getId());
+            ps.setDouble(2, order.calculateTotal());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    // insert child items
+    private void insertOrderItems(int orderId, Order order) {
+
+        try {
+            String sql =
+                    "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price_at_purchase, subtotal) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            for (OrderItem oi : order.getItems()) {
+
+                ps.setInt(1, orderId);
+                ps.setInt(2, oi.getMenuItem().getId());
+                ps.setInt(3, oi.getQuantity());
+                ps.setDouble(4, oi.getPriceAtPurchase());
+                ps.setDouble(5, oi.getPriceAtPurchase() * oi.getQuantity());
+
+                ps.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // deduct stock after success
+    private void deductStocks(Order order) {
+
+        try {
+            String sql =
+                    "UPDATE menu_items SET stock = stock - ? WHERE id = ?";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            for (OrderItem oi : order.getItems()) {
+
+                ps.setInt(1, oi.getQuantity());
+                ps.setInt(2, oi.getMenuItem().getId());
+
+                ps.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // rollback transaction
+    private void rollback() {
+
+        try {
+            if (conn != null) {
+                conn.rollback();
+                conn.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -6,7 +6,6 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,11 +16,7 @@ public class ReportService {
     public double getRevenueToday() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT IFNULL(SUM(total),0) " + "FROM orders WHERE DATE(order_datetime)=CURDATE()";
@@ -41,11 +36,7 @@ public class ReportService {
     public int getOrdersToday() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT COUNT(*) FROM orders WHERE DATE(order_datetime)=CURDATE()";
@@ -65,11 +56,7 @@ public class ReportService {
     public String getBestSeller() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT m.name AS menu_name, SUM(oi.quantity) qty " + "FROM order_items oi " +
@@ -91,11 +78,7 @@ public class ReportService {
     public int getLowStockCount() {
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT COUNT(*) FROM menu_items WHERE stock <= 3 AND active = true";
@@ -117,11 +100,7 @@ public class ReportService {
         List<String[]> data = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT category, SUM(stock) total_stock " +
@@ -147,11 +126,7 @@ public class ReportService {
         List<String[]> data = new ArrayList<>();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT DATE(order_datetime) day, COUNT(*) total_orders " +
@@ -178,12 +153,7 @@ public class ReportService {
         ObservableList<PieChart.Data> list = FXCollections.observableArrayList();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
-
+            Connection conn = DBConnection.getConnection();
             String sql =
                     "SELECT m.category, SUM(oi.quantity) qty " +
                     "FROM order_items oi " + "JOIN menu_items m ON oi.menu_item_id = m.id " +
@@ -208,11 +178,7 @@ public class ReportService {
         ObservableList<XYChart.Data<String, Number>> list = FXCollections.observableArrayList();
 
         try {
-            Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/restaurant_db",
-                    "root",
-                    ""
-            );
+            Connection conn = DBConnection.getConnection();
 
             String sql =
                     "SELECT DATE(order_datetime) day, COUNT(*) total " + "FROM orders " +

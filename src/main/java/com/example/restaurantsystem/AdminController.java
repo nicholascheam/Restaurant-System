@@ -233,4 +233,24 @@ public class AdminController {
         DashboardController c = SceneSwitcher.switchScene(table, "Dashboard.fxml");
         c.setUser(currentUser);
     }
+    // adding option for each item
+    @FXML
+    private void handleOptions() {
+
+        MenuItem selected = table.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            setStatus("Select an item first.", "orange");
+            return;
+        }
+
+        try {
+            OptionAdminController c = SceneSwitcher.switchScene(table, "OptionAdmin.fxml");
+            c.setMenuItem(selected);
+            c.setUser(currentUser);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

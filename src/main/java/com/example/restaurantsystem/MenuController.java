@@ -151,26 +151,28 @@ public class MenuController {
     private void updateCartUI() {
 
         cartBox.getChildren().clear();
-
         for (OrderItem oi : order.getItems()) {
 
-            Label label = new Label(
-                    oi.getMenuItem().getName() + " x" + oi.getQuantity()
-            );
+            String text = oi.getMenuItem().getName();
+            if (oi.getCustomText() != null && !oi.getCustomText().isBlank()) {
+                text += " (" + oi.getCustomText() + ")";
+            }
+            text += " x" + oi.getQuantity();
 
+            Label label = new Label(text);
             Button removeBtn = new Button("Remove");
-
             removeBtn.setOnAction(e -> {
                 order.removeItem(oi.getMenuItem(), 1);
                 updateCartUI();
             });
 
             HBox row = new HBox(10, label, removeBtn);
-
             cartBox.getChildren().add(row);
         }
 
-        totalLabel.setText("Total: $" + order.calculateTotal());
+        totalLabel.setText(
+                String.format("Total: $%.2f", order.calculateTotal())
+        );
     }
 
     // "Place Order" button
@@ -271,7 +273,8 @@ public class MenuController {
             String customText = controller.getSelectedText();
 
             if (!customText.isBlank()) {
-                order.addItem(item, 1, customText);
+                int qty = controller.getSelectedQty();
+                order.addItem(item, qty, customText);
             }
 
             updateCartUI();

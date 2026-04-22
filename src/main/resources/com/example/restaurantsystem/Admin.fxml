@@ -47,6 +47,7 @@
                 <Button text="Deactivate" onAction="#handleDelete"/>
                 <Button text="Hard Delete" onAction="#handleHardDelete"/>
                 <Button text="Activate" onAction="#handleActivate"/>
+                <Button text="Options" onAction="#handleOptions"/>
             </HBox>
 
             <Label fx:id="statusLabel"/>

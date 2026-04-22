@@ -86,10 +86,10 @@ public class DatabaseInitializer {
                 quantity INT NOT NULL,
                 price_at_purchase DOUBLE NOT NULL,
                 subtotal DOUBLE NOT NULL,
-                added_datetime DATETIME
-                DEFAULT CURRENT_TIMESTAMP
+                custom_text VARCHAR(255),
+                added_datetime DATETIME DEFAULT CURRENT_TIMESTAMP
             )
-        """);
+            """);
 
             stmt.executeUpdate("""
             CREATE TABLE IF NOT EXISTS item_options (

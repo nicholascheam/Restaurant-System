@@ -24,7 +24,9 @@ public class OptionController {
     public String getSelectedText() {
         return selectedText;
     }
-
+    public int getSelectedQty() {
+        return qtySpinner.getValue();
+    }
     public void setData(MenuItem item, List<ItemOption> options) {
 
         this.item = item;

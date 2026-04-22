@@ -18,15 +18,19 @@ public class OrderService {
             conn.setAutoCommit(false);
 
             if (!checkStock(order)) {
-                conn.rollback();
+                rollback();
                 return false;
             }
 
             int orderId = insertOrder(order);
+
+            if (orderId == 0) {
+                rollback();
+                return false;
+            }
+
             insertOrderItems(orderId, order);
-
             deductStocks(order);
-
             conn.commit();
             conn.close();
 
@@ -35,9 +39,8 @@ public class OrderService {
         } catch (Exception e) {
             e.printStackTrace();
             rollback();
+            return false;
         }
-
-        return false;
     }
 
     // validate order
@@ -122,11 +125,10 @@ public class OrderService {
 
         try {
             String sql =
-                    "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price_at_purchase, subtotal) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+                    "INSERT INTO order_items " + "(order_id, menu_item_id, quantity, price_at_purchase, subtotal, custom_text) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
 
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             for (OrderItem oi : order.getItems()) {
 
@@ -135,6 +137,7 @@ public class OrderService {
                 ps.setInt(3, oi.getQuantity());
                 ps.setDouble(4, oi.getPriceAtPurchase());
                 ps.setDouble(5, oi.getPriceAtPurchase() * oi.getQuantity());
+                ps.setString(6, oi.getCustomText());
 
                 ps.executeUpdate();
             }

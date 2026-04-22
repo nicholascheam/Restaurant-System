@@ -1,12 +1,16 @@
 package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,7 @@ public class MenuController {
     private Order order;
     private OrderService orderService = new OrderService();
     private MenuService menuService = new MenuService();
+    private OptionService optionService = new OptionService();
     @FXML
     private Label userLabel;
     @FXML
@@ -42,6 +47,7 @@ public class MenuController {
         loadCategories();
         loadMenuItems();
     }
+
     // loading categories
     private void loadCategories() {
 
@@ -87,11 +93,13 @@ public class MenuController {
             categoryBox.getChildren().add(btn);
         }
     }
+
     private List<MenuItem> getMenuItems() {
         MenuService menuService = new MenuService();
         List<MenuItem> items = menuService.getAllItems();
         return items;
     }
+
     // retrieve item from menu then put it in a grid
     private void loadMenuItems() {
         menuGrid.getChildren().clear();
@@ -112,6 +120,7 @@ public class MenuController {
             }
         }
     }
+
     // puts item in a structured box to be structured like blocks
     private VBox createItemCard(MenuItem item) {
 
@@ -121,10 +130,7 @@ public class MenuController {
         Button addBtn = new Button("Add");
         Label desc = new Label(item.getDescription());
         desc.setWrapText(true);
-        addBtn.setOnAction(e -> {
-            order.addItem(item, 1);
-            updateCartUI();
-        });
+        addBtn.setOnAction(e -> handleAddItem(item));
 
         Button infoBtn = new Button("More Info");
 
@@ -140,6 +146,7 @@ public class MenuController {
 
         return box;
     }
+
     // for deleting cart after ordering
     private void updateCartUI() {
 
@@ -165,6 +172,7 @@ public class MenuController {
 
         totalLabel.setText("Total: $" + order.calculateTotal());
     }
+
     // "Place Order" button
     @FXML
     private void handlePlaceOrder() {
@@ -190,17 +198,20 @@ public class MenuController {
         order.clear();
         updateCartUI();
     }
+
     // "Logout" button
     @FXML
     private void handleLogout() {
         SceneSwitcher.switchScene(menuGrid, "Login.fxml");
     }
+
     // "Admin panel" button
     @FXML
     private void goToAdmin() {
         AdminController c = SceneSwitcher.switchScene(menuGrid, "Admin.fxml");
         c.setUser(user);
     }
+
     // method for showing each category
     private void loadMenuItems(List<MenuItem> items) {
         menuGrid.getChildren().clear();
@@ -224,6 +235,7 @@ public class MenuController {
             }
         }
     }
+
     private void loadMenuItemsByCategory(String category) {
         menuGrid.getChildren().clear();
         List<MenuItem> filtered = new ArrayList<>();
@@ -236,24 +248,36 @@ public class MenuController {
 
         loadMenuItems(filtered);
     }
-    // each method for each button
-    @FXML
-    private void showAll() {
-        loadMenuItems(getMenuItems());
-    }
+    private void handleAddItem(MenuItem item) {
 
-    @FXML
-    private void showDrinks() {
-        loadMenuItemsByCategory("Drinks");
-    }
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("Option.fxml")
+            );
 
-    @FXML
-    private void showDesserts() {
-        loadMenuItemsByCategory("Desserts");
-    }
+            Parent root = loader.load();
 
-    @FXML
-    private void showBurgers() {
-        loadMenuItemsByCategory("Burgers");
+            OptionController controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle(item.getName() + " Options");
+            stage.setScene(new Scene(root, 350, 400));
+
+            controller.setStage(stage);
+            controller.setData(item, optionService.getOptions(item.getId()));
+
+            stage.showAndWait();
+
+            String customText = controller.getSelectedText();
+
+            if (!customText.isBlank()) {
+                order.addItem(item, 1, customText);
+            }
+
+            updateCartUI();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

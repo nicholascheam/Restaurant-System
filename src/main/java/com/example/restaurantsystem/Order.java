@@ -24,41 +24,49 @@ public class Order {
         this.items = new ArrayList<>();
         this.dateTime = LocalDateTime.now();
     }
+    // method overloading for addItem
     void addItem(MenuItem menuItem, int quantity) {
-        // prevent order -1 items
+        addItem(menuItem, quantity, "");
+    }
+
+    void addItem(MenuItem menuItem, int quantity, String customText) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity");
         }
-        // check for availability
+
         if (!menuItem.isAvailable()) {
             System.out.println("Item not available");
             return;
         }
-        // check for stock vs order quantity
+
         if (menuItem.getStock() < quantity) {
             System.out.println("Not enough stock");
             return;
         }
-        // iterate through whole items list
-        for (OrderItem oi : items) {
-            // check for exact id item
-            if (oi.getMenuItem().getId() == menuItem.getId()) {
 
-                int totalQuantity = oi.getQuantity() + quantity;
-                // check for stock vs order quantity
+        for (OrderItem oi : items) {
+
+            boolean sameItem = oi.getMenuItem().getId() == menuItem.getId();
+            boolean sameCustom = oi.getCustomText().equals(customText);
+
+            if (sameItem && sameCustom) {
+                int totalQuantity =
+                        oi.getQuantity() + quantity;
+
                 if (totalQuantity > menuItem.getStock()) {
                     System.out.println("Not enough stock");
                     return;
                 }
-                // after order, set the stock quantity
+
                 oi.setQuantity(totalQuantity);
                 return;
             }
         }
-        // if no item exist then add a new orderitem
-        OrderItem newItem = new OrderItem(menuItem, quantity);
+
+        OrderItem newItem = new OrderItem(menuItem, quantity, customText);
         items.add(newItem);
     }
+
     void removeItem(MenuItem menuItem, int quantity) {
         // check for stock vs order quantity
         if (quantity <= 0) {

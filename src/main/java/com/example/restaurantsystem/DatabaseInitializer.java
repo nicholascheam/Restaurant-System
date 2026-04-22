@@ -1,6 +1,7 @@
 package com.example.restaurantsystem;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class DatabaseInitializer {
@@ -8,7 +9,11 @@ public class DatabaseInitializer {
     public static void initialize() {
 
         try {
-            Connection conn = DBConnection.getConnection();
+            Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/",
+                    "root",
+                    ""
+            );
 
             Statement stmt = conn.createStatement();
 
@@ -22,7 +27,8 @@ public class DatabaseInitializer {
             createTables();
             seedAdmin();
             seedMenuItems();
-
+            seedItemOptions();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,6 +173,78 @@ public class DatabaseInitializer {
                    25, 'Drinks', true
             WHERE NOT EXISTS (
                 SELECT 1 FROM menu_items WHERE name='Coke'
+            )
+        """);
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // default food item options
+    private static void seedItemOptions() {
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            Statement stmt = conn.createStatement();
+
+            // Burger options
+            stmt.executeUpdate("""
+            INSERT INTO item_options
+            (menu_item_id, option_name, option_values, control_type, required)
+
+            SELECT id, 'Size', 'Regular,Large', 'radio', true
+            FROM menu_items
+            WHERE name='Burger'
+            AND NOT EXISTS (
+                SELECT 1 FROM item_options
+                WHERE menu_item_id = menu_items.id
+                AND option_name='Size'
+            )
+        """);
+
+            stmt.executeUpdate("""
+            INSERT INTO item_options
+            (menu_item_id, option_name, option_values, control_type, required)
+
+            SELECT id, 'Cheese', 'Yes,No', 'radio', false
+            FROM menu_items
+            WHERE name='Burger'
+            AND NOT EXISTS (
+                SELECT 1 FROM item_options
+                WHERE menu_item_id = menu_items.id
+                AND option_name='Cheese'
+            )
+        """);
+
+            // Coke options
+            stmt.executeUpdate("""
+            INSERT INTO item_options
+            (menu_item_id, option_name, option_values, control_type, required)
+
+            SELECT id, 'Ice', 'Normal,Less,No Ice', 'combo', false
+            FROM menu_items
+            WHERE name='Coke'
+            AND NOT EXISTS (
+                SELECT 1 FROM item_options
+                WHERE menu_item_id = menu_items.id
+                AND option_name='Ice'
+            )
+        """);
+
+            stmt.executeUpdate("""
+            INSERT INTO item_options
+            (menu_item_id, option_name, option_values, control_type, required)
+
+            SELECT id, 'Sugar', 'Normal,Less,None', 'combo', false
+            FROM menu_items
+            WHERE name='Coke'
+            AND NOT EXISTS (
+                SELECT 1 FROM item_options
+                WHERE menu_item_id = menu_items.id
+                AND option_name='Sugar'
             )
         """);
 

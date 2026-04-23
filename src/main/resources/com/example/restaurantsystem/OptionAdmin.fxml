@@ -3,8 +3,43 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" alignment="TOP_CENTER" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.restaurantsystem.DashboardController"
-      style="-fx-padding: 20;">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.restaurantsystem.OptionAdminController">
 
-</VBox>
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding:10;">
+            <Label text="Manage Item Options"
+                   style="-fx-font-size:18px; -fx-font-weight:bold;" />
+            <Button text="Back" onAction="#goBack"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="table">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="nameCol" text="Option Name" prefWidth="140"/>
+                <TableColumn fx:id="valuesCol" text="Values" prefWidth="220"/>
+                <TableColumn fx:id="typeCol" text="Type" prefWidth="100"/>
+                <TableColumn fx:id="requiredCol" text="Required" prefWidth="90"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <right>
+        <VBox spacing="10" style="-fx-padding:10;">
+            <Label fx:id="itemLabel" text="Selected Item"/>
+            <TextField fx:id="nameField" promptText="Option Name"/>
+            <TextField fx:id="valuesField" promptText="Values (A,B,C)"/>
+            <ComboBox fx:id="typeBox"/>
+            <CheckBox fx:id="requiredBox" text="Required"/>
+            <HBox spacing="10">
+                <Button text="Add" onAction="#handleAdd"/>
+                <Button text="Update" onAction="#handleUpdate"/>
+                <Button text="Delete" onAction="#handleDelete"/>
+            </HBox>
+            <Label fx:id="statusLabel"/>
+        </VBox>
+    </right>
+
+</BorderPane>

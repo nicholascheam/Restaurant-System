@@ -33,16 +33,36 @@ public class OptionController {
         titleLabel.setText(item.getName());
         qtySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, 1));
         qtySpinner.valueProperty().addListener((a,b,c)->updateTotal());
+        optionsBox.getChildren().clear();
 
         for (ItemOption op : options) {
-
             Label label = new Label(op.getOptionName());
-            ComboBox<String> combo = new ComboBox<>();
+            optionsBox.getChildren().add(label);
             String[] vals = op.getOptionValues().split(",");
-            combo.getItems().addAll(vals);
 
-            if (vals.length > 0) combo.setValue(vals[0].trim());
-            optionsBox.getChildren().addAll(label, combo);
+            if (op.getControlType().equalsIgnoreCase("radio")) {
+                ToggleGroup group = new ToggleGroup();
+                VBox radioBox = new VBox(5);
+
+                for (String val : vals) {
+                    RadioButton rb = new RadioButton(val.trim());
+                    rb.setToggleGroup(group);
+                    radioBox.getChildren().add(rb);
+                }
+                ((RadioButton) radioBox.getChildren().get(0)).setSelected(true);
+                optionsBox.getChildren().add(radioBox);
+            }
+
+            else if (op.getControlType().equalsIgnoreCase("checkbox")) {
+
+                VBox checkBox = new VBox(5);
+
+                for (String val : vals) {
+                    CheckBox cb = new CheckBox(val.trim());
+                    checkBox.getChildren().add(cb);
+                }
+                optionsBox.getChildren().add(checkBox);
+            }
         }
         updateTotal();
     }
@@ -71,21 +91,23 @@ public class OptionController {
         StringBuilder result = new StringBuilder();
 
         for (Node node : optionsBox.getChildren()) {
-            if (node instanceof ComboBox<?> combo) {
-                Object selected = combo.getValue();
-
-                if (selected != null) {
-                    if (!result.isEmpty()) result.append(", ");
-                    result.append(selected.toString());
+            if (node instanceof VBox box) {
+                for (Node inner : box.getChildren()) {
+                    if (inner instanceof RadioButton rb && rb.isSelected()) {
+                        if (!result.isEmpty()) result.append(", ");
+                        result.append(rb.getText());
+                    }
+                    if (inner instanceof CheckBox cb && cb.isSelected()) {
+                        if (!result.isEmpty()) result.append(", ");
+                        result.append(cb.getText());
+                    }
                 }
             }
         }
-
         if (!notesField.getText().isBlank()) {
             if (!result.isEmpty()) result.append(", ");
-            result.append("Notes: ").append(notesField.getText());
+            result.append("Note: ").append(notesField.getText());
         }
-
         selectedText = result.toString();
         stage.close();
     }

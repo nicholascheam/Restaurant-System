@@ -195,13 +195,13 @@ public class DatabaseInitializer {
             INSERT INTO item_options
             (menu_item_id, option_name, option_values, control_type, required)
 
-            SELECT id, 'Size', 'Regular,Large', 'radio', true
+            SELECT id, 'Extras', 'Cheese,Bacon,Egg', 'checkbox', false
             FROM menu_items
             WHERE name='Burger'
             AND NOT EXISTS (
                 SELECT 1 FROM item_options
                 WHERE menu_item_id = menu_items.id
-                AND option_name='Size'
+                AND option_name='Extras'
             )
         """);
 

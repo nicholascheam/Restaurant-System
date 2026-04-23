@@ -100,6 +100,7 @@ public class AdminController {
     @FXML
     private void handleAdd() {
 
+        if (!isValidInput()) return;
         MenuItem item = new MenuItem();
 
         item.setName(nameField.getText());
@@ -123,8 +124,8 @@ public class AdminController {
     @FXML
     private void handleUpdate() {
 
-        MenuItem selected =
-                table.getSelectionModel().getSelectedItem();
+        if (!isValidInput()) return;
+        MenuItem selected = table.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
             setStatus("Select an item first.", "orange");
@@ -252,5 +253,48 @@ public class AdminController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    // to stop blank inputs
+    private boolean isValidInput() {
+
+        if (nameField.getText().isBlank()) {
+            setStatus("Name is required.", "red");
+            return false;
+        }
+
+        if (categoryField.getText().isBlank()) {
+            setStatus("Category is required.", "red");
+            return false;
+        }
+
+        if (descField.getText().isBlank()) {
+            setStatus("Description is required.", "red");
+            return false;
+        }
+
+        try {
+            double price = Double.parseDouble(priceField.getText());
+            if (price <= 0) {
+                setStatus("Price must be more than 0.", "red");
+                return false;
+            }
+
+        } catch (Exception e) {
+            setStatus("Invalid price.", "red");
+            return false;
+        }
+
+        try {
+            int stock = Integer.parseInt(stockField.getText());
+            if (stock < 0) {
+                setStatus("Stock cannot be negative.", "red");
+                return false;
+            }
+
+        } catch (Exception e) {
+            setStatus("Invalid stock.", "red");
+            return false;
+        }
+        return true;
     }
 }

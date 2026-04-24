@@ -7,7 +7,7 @@
             fx:controller="com.example.restaurantsystem.OptionAdminController">
 
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding:10;">
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="topbar">
             <Label text="Manage Item Options"
                    style="-fx-font-size:18px; -fx-font-weight:bold;" />
             <Button text="Back" onAction="#goBack"/>
@@ -27,7 +27,7 @@
     </center>
 
     <right>
-        <VBox spacing="10" style="-fx-padding:10;">
+        <VBox spacing="10" styleClass="form-panel">
             <Label fx:id="itemLabel" text="Selected Item"/>
             <TextField fx:id="nameField" promptText="Option Name"/>
             <TextField fx:id="valuesField" promptText="Values (A,B,C)"/>

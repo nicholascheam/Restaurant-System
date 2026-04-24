@@ -10,18 +10,15 @@ public class SceneSwitcher {
 
     public static <T> T switchScene(Node node, String fxml) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    SceneSwitcher.class.getResource(fxml)
-            );
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxml));
 
             Parent root = loader.load();
 
             Stage stage = (Stage) node.getScene().getWindow();
 
-            Scene scene = new Scene(root, 800, 600);
+            Scene scene = new Scene(root, 1100, 700);
 
-            scene.getStylesheets().add(SceneSwitcher.class.getResource("style.css").toExternalForm()
-            );
+            scene.getStylesheets().add(SceneSwitcher.class.getResource("style.css").toExternalForm());
 
             stage.setScene(scene);
 

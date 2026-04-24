@@ -40,7 +40,7 @@ public class Order {
         }
 
         if (menuItem.getStock() < quantity) {
-            System.out.println("Not enough stock");
+            AlertUtil.info("Only " + menuItem.getStock() + " left in stock.");
             return;
         }
 
@@ -50,11 +50,10 @@ public class Order {
             boolean sameCustom = oi.getCustomText().equals(customText);
 
             if (sameItem && sameCustom) {
-                int totalQuantity =
-                        oi.getQuantity() + quantity;
+                int totalQuantity = oi.getQuantity() + quantity;
 
                 if (totalQuantity > menuItem.getStock()) {
-                    System.out.println("Not enough stock");
+                    AlertUtil.info("Cannot add more. Max stock: " + menuItem.getStock());
                     return;
                 }
 

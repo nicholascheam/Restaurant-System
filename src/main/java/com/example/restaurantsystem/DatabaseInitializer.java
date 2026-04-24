@@ -209,7 +209,7 @@ public class DatabaseInitializer {
             INSERT INTO item_options
             (menu_item_id, option_name, option_values, control_type, required)
 
-            SELECT id, 'Cheese', 'Yes,No', 'radio', false
+            SELECT id, 'Cheese', 'Cheese,No Cheese', 'radio', false
             FROM menu_items
             WHERE name='Burger'
             AND NOT EXISTS (

@@ -39,9 +39,13 @@ public class MenuController {
 
     public void setUser(User user) {
         this.user = user;
+        if (user.isAdmin()) {
+            totalLabel.setText("Admin mode - ordering disabled");
+        }
         this.order = new Order(user);
 
         userLabel.setText("Hello, " + user.getUsername());
+        userLabel.getStyleClass().add("title-label");
         adminButton.setVisible(user.isAdmin());
         adminButton.setManaged(user.isAdmin());
         loadCategories();
@@ -58,7 +62,7 @@ public class MenuController {
         Button allBtn = new Button("All");
         allBtn.setMaxWidth(Double.MAX_VALUE);
         allBtn.setOnAction(e -> loadMenuItems());
-
+        allBtn.getStyleClass().add("blue-btn");
         categoryBox.getChildren().add(allBtn);
 
         Map<String, Integer> counts = menuService.getCategoryCounts();
@@ -81,6 +85,7 @@ public class MenuController {
             int count = counts.get(cat);
 
             Button btn = new Button(cat + " (" + count + ")");
+            btn.getStyleClass().add("blue-btn");
 
             btn.setMaxWidth(Double.MAX_VALUE);
 
@@ -128,11 +133,21 @@ public class MenuController {
         Label price = new Label("$" + item.getPrice());
 
         Button addBtn = new Button("Add");
+        addBtn.getStyleClass().add("green-btn");
+        if (user.isAdmin()) {
+            addBtn.setDisable(true);
+        }
+        if (item.getStock() <= 0) {
+            addBtn.setDisable(true);
+            addBtn.setText("Out of Stock");
+        }
+        Label stockLabel = new Label("Stock: " + item.getStock());
         Label desc = new Label(item.getDescription());
         desc.setWrapText(true);
         addBtn.setOnAction(e -> handleAddItem(item));
 
         Button infoBtn = new Button("More Info");
+        infoBtn.getStyleClass().add("blue-btn");
 
         infoBtn.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -141,8 +156,10 @@ public class MenuController {
             alert.setContentText(item.getDescription());
             alert.showAndWait();
         });
-        VBox box = new VBox(10, name, price, addBtn, infoBtn);
-        box.setStyle("-fx-border-color: black; -fx-padding: 10;");
+        VBox box = new VBox(10, name, price, stockLabel, addBtn, infoBtn);
+        box.getStyleClass().add("menu-card");
+        box.setPrefWidth(180);
+        box.setMinHeight(220);
 
         return box;
     }
@@ -160,14 +177,23 @@ public class MenuController {
             text += " x" + oi.getQuantity();
 
             Label label = new Label(text);
-            Button removeBtn = new Button("Remove");
-            removeBtn.setOnAction(e -> {
+            Button minusBtn = new Button("-1");
+            Button removeAllBtn = new Button("Remove All");
+            minusBtn.getStyleClass().add("blue-btn");
+            removeAllBtn.getStyleClass().add("red-btn");
+            minusBtn.setOnAction(e -> {
                 order.removeItem(oi.getMenuItem(), 1);
                 updateCartUI();
             });
 
-            HBox row = new HBox(10, label, removeBtn);
+            removeAllBtn.setOnAction(e -> {
+                order.removeItem(oi.getMenuItem(), oi.getQuantity());
+                updateCartUI();
+            });
+
+            HBox row = new HBox(10, label, minusBtn, removeAllBtn);
             cartBox.getChildren().add(row);
+            cartBox.getStyleClass().add("cart-box");
         }
 
         totalLabel.setText(
@@ -178,6 +204,11 @@ public class MenuController {
     // "Place Order" button
     @FXML
     private void handlePlaceOrder() {
+
+        if (user.isAdmin()) {
+            AlertUtil.info("Admins cannot place customer orders.");
+            return;
+        }
 
         if (order.getItems().isEmpty()) {
             AlertUtil.info("Cart is empty.");
@@ -194,9 +225,7 @@ public class MenuController {
         } else {
             AlertUtil.info("Not enough stock.");
         }
-
-        AlertUtil.info("Order placed successfully!");
-
+        
         order.clear();
         updateCartUI();
     }
@@ -253,9 +282,7 @@ public class MenuController {
     private void handleAddItem(MenuItem item) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("Option.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Option.fxml"));
 
             Parent root = loader.load();
 
@@ -263,18 +290,22 @@ public class MenuController {
 
             Stage stage = new Stage();
             stage.setTitle(item.getName() + " Options");
-            stage.setScene(new Scene(root, 350, 400));
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.sizeToScene();
 
             controller.setStage(stage);
             controller.setData(item, optionService.getOptions(item.getId()));
 
             stage.showAndWait();
 
-            String customText = controller.getSelectedText();
+            if (controller.isConfirmed()) {
 
-            if (!customText.isBlank()) {
+                String customText = controller.getSelectedText();
                 int qty = controller.getSelectedQty();
+
                 order.addItem(item, qty, customText);
+                updateCartUI();
             }
 
             updateCartUI();

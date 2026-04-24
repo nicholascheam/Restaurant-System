@@ -7,23 +7,19 @@
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.restaurantsystem.RegisterController">
 
-    <VBox spacing="15" alignment="CENTER"
-          maxWidth="320"
-          styleClass="card">
+    <VBox spacing="15" alignment="CENTER" maxWidth="340" styleClass="menu-card">
 
         <padding>
-            <Insets top="25" right="25" bottom="25" left="25"/>
+            <Insets top="30" right="30" bottom="30" left="30"/>
         </padding>
 
-        <Label text="Create Account" styleClass="title"/>
+        <Label text="Create Account" styleClass="title-label"/>
 
-        <TextField fx:id="usernameField"
-                   promptText="Username"/>
+        <TextField fx:id="usernameField" promptText="Username" maxWidth="Infinity"/>
 
-        <PasswordField fx:id="passwordField"
-                       promptText="Password"/>
+        <PasswordField fx:id="passwordField" promptText="Password" maxWidth="Infinity"/>
 
-        <Button text="Register" maxWidth="Infinity" onAction="#handleRegister"/>
+        <Button text="Register" maxWidth="Infinity" styleClass="blue-btn" onAction="#handleRegister"/>
 
         <Hyperlink text="Back to Login" onAction="#goToLogin"/>
 

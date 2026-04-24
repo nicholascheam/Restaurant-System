@@ -9,7 +9,7 @@
         <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="topbar">
             <Label fx:id="userLabel"/>
             <Button fx:id="adminButton" text="Admin Panel" onAction="#goToAdmin"/>
-            <Button text="Logout" onAction="#handleLogout"/>
+            <Button text="Logout" onAction="#handleLogout" styleClass="red-btn"/>
         </HBox>
     </top>
 
@@ -37,7 +37,7 @@
 
     <bottom>
         <HBox alignment="CENTER_RIGHT" styleClass="footer">
-            <Button text="Place Order" onAction="#handlePlaceOrder"/>
+            <Button text="Place Order" onAction="#handlePlaceOrder" styleClass="green-btn"/>
         </HBox>
     </bottom>
 

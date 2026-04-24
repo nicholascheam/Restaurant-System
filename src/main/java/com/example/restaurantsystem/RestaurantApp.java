@@ -14,7 +14,7 @@ public class RestaurantApp extends Application {
         DatabaseInitializer.initialize();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 450, 350);
+        Scene scene = new Scene(root, 1100, 700);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setTitle("Restaurant System");
         stage.setScene(scene);

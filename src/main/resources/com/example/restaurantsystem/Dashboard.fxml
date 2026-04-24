@@ -9,10 +9,9 @@
       fx:controller="com.example.restaurantsystem.DashboardController"
       style="-fx-padding: 20;">
 
-    <Label text="Restaurant Dashboard"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <Label text="Restaurant Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
 
-    <GridPane hgap="20" vgap="15">
+    <GridPane hgap="20" vgap="15" alignment="CENTER">
 
         <Label text="Revenue Today:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <Label fx:id="revenueLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -28,7 +27,7 @@
 
     </GridPane>
 
-    <HBox spacing="20">
+    <HBox spacing="20" alignment="CENTER">
 
         <PieChart fx:id="categoryChart" title="Menu Stock by Category" prefWidth="350" prefHeight="300"/>
 

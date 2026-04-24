@@ -14,6 +14,7 @@ public class AdminController {
     @FXML private TableColumn<MenuItem, Integer> stockCol;
     @FXML private TableColumn<MenuItem, String> categoryCol;
     @FXML private TableColumn<MenuItem, Boolean> activeCol;
+    @FXML private TableColumn<MenuItem, String> descCol;
     @FXML private TextField nameField;
     @FXML private TextField priceField;
     @FXML private TextField stockField;
@@ -49,6 +50,7 @@ public class AdminController {
         stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
         activeCol.setCellValueFactory(new PropertyValueFactory<>("active"));
+        descCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         table.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldItem, selected) -> {
 

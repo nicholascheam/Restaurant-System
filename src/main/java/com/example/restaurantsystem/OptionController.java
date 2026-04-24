@@ -20,12 +20,16 @@ public class OptionController {
     private Order order;
     private Stage stage;
     private String selectedText = "";
+    private boolean confirmed = false;
     // getter and setters
     public String getSelectedText() {
         return selectedText;
     }
     public int getSelectedQty() {
         return qtySpinner.getValue();
+    }
+    public boolean isConfirmed() {
+        return confirmed;
     }
     public void setData(MenuItem item, List<ItemOption> options) {
 
@@ -109,12 +113,13 @@ public class OptionController {
             result.append("Note: ").append(notesField.getText());
         }
         selectedText = result.toString();
+        confirmed = true;
         stage.close();
     }
     // closing order window
     @FXML
     private void handleCancel() {
-        Stage stage = (Stage) titleLabel.getScene().getWindow();
+        confirmed = false;
         stage.close();
     }
 }

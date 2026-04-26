@@ -23,8 +23,7 @@ public class LoginController {
 
         if (user != null) {
 
-            MenuController controller =
-                    SceneSwitcher.switchScene(usernameField, "Menu.fxml");
+            MenuController controller = SceneSwitcher.switchScene(usernameField, "Menu.fxml");
 
             if (controller != null) {
                 controller.setUser(user);

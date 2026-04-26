@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.restaurantsystem.PaymentController"
+      prefWidth="360" prefHeight="320" styleClass="card">
+
+    <Label text="Checkout Payment" styleClass="title-label"/>
+
+    <RadioButton fx:id="cashRadio" text="Cash" selected="true"/>
+    <RadioButton fx:id="cardRadio" text="Card"/>
+    <TextField fx:id="cardField" promptText="Enter 16 digit card number" disable="true" maxWidth="250"/>
+    <Label fx:id="statusLabel"/>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="red-btn"/>
+        <Button text="Pay Now" onAction="#handlePay" styleClass="green-btn"/>
+    </HBox>
+
+</VBox>

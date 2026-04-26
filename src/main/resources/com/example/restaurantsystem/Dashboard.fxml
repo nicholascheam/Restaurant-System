@@ -4,47 +4,63 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" alignment="TOP_CENTER"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.restaurantsystem.DashboardController"
-      style="-fx-padding: 20;">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.restaurantsystem.DashboardController">
 
-    <Label text="Restaurant Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <top>
+        <VBox spacing="12" alignment="CENTER" style="-fx-padding:20;">
+            <Label text="Restaurant Dashboard"
+                   styleClass="title-label"/>
+            <HBox spacing="15" alignment="CENTER">
+                <VBox styleClass="menu-card">
+                    <Label text="Revenue Today"/>
+                    <Label fx:id="revenueLabel" styleClass="subtitle-label"/>
+                </VBox>
+                <VBox styleClass="menu-card">
+                    <Label text="Orders Today"/>
+                    <Label fx:id="ordersLabel" styleClass="subtitle-label"/>
+                </VBox>
+                <VBox styleClass="menu-card">
+                    <Label text="Best Seller"/>
+                    <Label fx:id="bestSellerLabel" styleClass="subtitle-label"/>
+                </VBox>
+                <VBox styleClass="menu-card">
+                    <Label text="Low Stock"/>
+                    <Label fx:id="lowStockLabel" styleClass="subtitle-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
 
-    <GridPane hgap="20" vgap="15" alignment="CENTER">
+    <center>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding:15;">
+            <HBox spacing="20" alignment="CENTER">
+                <PieChart fx:id="categoryChart" title="Stock by Category" prefWidth="380" prefHeight="300"/>
+                <BarChart fx:id="ordersChart" title="Orders Last 7 Days" prefWidth="420" prefHeight="300">
+                    <xAxis>
+                        <CategoryAxis/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis/>
+                    </yAxis>
+                </BarChart>
+            </HBox>
 
-        <Label text="Revenue Today:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <Label fx:id="revenueLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <LineChart fx:id="revenueChart" title="Revenue Last 7 Days" prefWidth="820" prefHeight="280">
+                <xAxis>
+                    <CategoryAxis/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis/>
+                </yAxis>
+            </LineChart>
+        </VBox>
+    </center>
 
-        <Label text="Orders Today:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <Label fx:id="ordersLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding:15;">
+            <Button text="Back" styleClass="blue-btn" onAction="#goBack"/>
+            <Button text="Export PDF" onAction="#handleExport" styleClass="green-btn"/>
+        </HBox>
+    </bottom>
 
-        <Label text="Best Seller:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <Label fx:id="bestSellerLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-        <Label text="Low Stock Items:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <Label fx:id="lowStockLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-    </GridPane>
-
-    <HBox spacing="20" alignment="CENTER">
-
-        <PieChart fx:id="categoryChart" title="Menu Stock by Category" prefWidth="350" prefHeight="300"/>
-
-        <BarChart fx:id="ordersChart" title="Orders Last 7 Days" prefWidth="400" prefHeight="300">
-
-            <xAxis>
-                <CategoryAxis />
-            </xAxis>
-
-            <yAxis>
-                <NumberAxis />
-            </yAxis>
-
-        </BarChart>
-
-    </HBox>
-
-    <Button text="Back" onAction="#goBack"/>
-
-</VBox>
+</BorderPane>

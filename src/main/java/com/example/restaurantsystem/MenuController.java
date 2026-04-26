@@ -215,19 +215,41 @@ public class MenuController {
             return;
         }
 
-        boolean success = orderService.placeOrder(order);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Payment.fxml"));
 
-        if (success) {
-            AlertUtil.info("Order placed!");
-            order.clear();
-            updateCartUI();
-            loadMenuItems();
-        } else {
-            AlertUtil.info("Not enough stock.");
+            Parent root = loader.load();
+
+            PaymentController controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Payment");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+
+            controller.setStage(stage);
+
+            stage.showAndWait();
+
+            if (!controller.isPaid()) {
+                return;
+            }
+
+            boolean success = orderService.placeOrder(order);
+
+            if (success) {
+                AlertUtil.info("Payment successful. Order placed!");
+                order.clear();
+                updateCartUI();
+                loadMenuItems();
+            } else {
+                AlertUtil.info("Order failed. Not enough stock.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.info("Payment page failed to open.");
         }
-        
-        order.clear();
-        updateCartUI();
     }
 
     // "Logout" button

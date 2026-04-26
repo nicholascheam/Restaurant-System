@@ -60,7 +60,7 @@ public class PaymentController {
             }
         });
     }
-
+    // pay button, validating card/cash options
     @FXML
     private void handlePay() {
 
@@ -84,7 +84,7 @@ public class PaymentController {
             stage.close();
         }
     }
-
+    // cancel button
     @FXML
     private void handleCancel() {
         paid = false;

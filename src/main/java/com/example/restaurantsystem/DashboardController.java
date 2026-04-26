@@ -2,6 +2,7 @@ package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -25,6 +26,7 @@ public class DashboardController {
     @FXML private Label lowStockLabel;
     @FXML private PieChart categoryChart;
     @FXML private BarChart<String, Number> ordersChart;
+    @FXML private LineChart<String, Number> revenueChart;
     private User currentUser;
     private ReportService reportService = new ReportService();
     private DashboardService dashboardService = new DashboardService();
@@ -43,6 +45,7 @@ public class DashboardController {
 
         loadCategoryChart();
         loadOrdersChart();
+        loadRevenueChart();
     }
     private void loadCategoryChart() {
         categoryChart.getData().clear();
@@ -58,6 +61,18 @@ public class DashboardController {
         series.getData().addAll(reportService.getLast7DaysOrders());
 
         ordersChart.getData().add(series);
+    }
+    private void loadRevenueChart() {
+
+        revenueChart.getData().clear();
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        series.setName("Revenue");
+
+        series.getData().addAll(dashboardService.getLast7DaysRevenue());
+
+        revenueChart.getData().add(series);
     }
     // write each line
     private float writeLine(PDPageContentStream content, int size, boolean bold, float x, float y, String text) throws Exception {

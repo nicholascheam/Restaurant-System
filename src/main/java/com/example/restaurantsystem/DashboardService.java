@@ -1,5 +1,9 @@
 package com.example.restaurantsystem;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardService {
+    // getting information from db
     public double getRevenueToday() {
         return getDoubleValue("SELECT IFNULL(SUM(total),0) FROM orders WHERE DATE(order_datetime)=CURDATE()");
     }
@@ -22,6 +27,7 @@ public class DashboardService {
     public double getAverageOrderValue() {
         return getDoubleValue("SELECT IFNULL(AVG(total),0) FROM orders");
     }
+    // top selling items
     public List<String> getTopSellingItems() {
 
         List<String> list = new ArrayList<>();
@@ -49,6 +55,7 @@ public class DashboardService {
 
         return list;
     }
+    // low stock items
     public List<String> getLowStockItems() {
 
         List<String> list = new ArrayList<>();
@@ -70,6 +77,7 @@ public class DashboardService {
 
         return list;
     }
+    // last 7 days performance
     public List<String> getLast7DayPerformance() {
 
         List<String> list = new ArrayList<>();
@@ -111,7 +119,33 @@ public class DashboardService {
 
         return list;
     }
+    public ObservableList<XYChart.Data<String, Number>> getLast7DaysRevenue() {
 
+        ObservableList<XYChart.Data<String, Number>> list = FXCollections.observableArrayList();
+
+        String sql = """
+                    SELECT DATE(order_datetime) day, SUM(total) revenue
+                    FROM orders
+                    WHERE order_datetime >= CURDATE() - INTERVAL 6 DAY
+                    GROUP BY DATE(order_datetime)
+                    ORDER BY day
+                    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(new XYChart.Data<>(rs.getString("day"), rs.getDouble("revenue")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    // for sql nums with decimals
     private double getDoubleValue(String sql) {
 
         try {
@@ -133,7 +167,7 @@ public class DashboardService {
 
         return 0;
     }
-
+    // sql int values
     private int getIntValue(String sql) {
 
         try {

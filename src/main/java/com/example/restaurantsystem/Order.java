@@ -35,7 +35,7 @@ public class Order {
         }
 
         if (!menuItem.isAvailable()) {
-            System.out.println("Item not available");
+            AlertUtil.error("Item not found.");
             return;
         }
 
@@ -78,7 +78,7 @@ public class Order {
             if (oi.getMenuItem().getId() == menuItem.getId()) {
                 // check for stock vs quantity
                 if (quantity > oi.getQuantity()) {
-                    System.out.println("Cannot remove more than existing quantity");
+                    AlertUtil.info("Cannot remove more than existing quantity.");
                     return;
                 }
 
@@ -94,7 +94,7 @@ public class Order {
             }
         }
         // if no items, print out items not found
-        System.out.println("Item not found in order");
+        AlertUtil.info("Item not found in cart.");
     }
     // iterate through orderitem list and add up everything
     double calculateTotal() {

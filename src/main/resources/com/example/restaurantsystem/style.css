@@ -117,8 +117,22 @@
     -fx-background-color: white;
     -fx-padding: 15;
     -fx-spacing: 10;
-    -fx-pref-width: 270;
+    -fx-pref-width: 420;
     -fx-border-color: #dfe3e8;
+}
+
+.cart-row {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 8;
+    -fx-padding: 4 0;
+}
+
+.cart-row .label {
+    -fx-wrap-text: false;
+    -fx-max-width: Infinity;
+    -fx-hgrow: ALWAYS;
+    -fx-pref-width: 0;
+    -fx-text-overrun: CLIP;
 }
 
 .footer {

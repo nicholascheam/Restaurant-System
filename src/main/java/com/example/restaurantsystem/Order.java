@@ -30,31 +30,35 @@ public class Order {
     }
 
     void addItem(MenuItem menuItem, int quantity, String customText) {
+
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity");
         }
 
         if (!menuItem.isAvailable()) {
-            AlertUtil.error("Item not found.");
-            return;
+            throw new IllegalArgumentException("Item not available.");
         }
 
         if (menuItem.getStock() < quantity) {
-            AlertUtil.info("Only " + menuItem.getStock() + " left in stock.");
-            return;
+            throw new IllegalArgumentException(
+                    "Only " + menuItem.getStock() + " left in stock."
+            );
         }
 
         for (OrderItem oi : items) {
 
             boolean sameItem = oi.getMenuItem().getId() == menuItem.getId();
+
             boolean sameCustom = oi.getCustomText().equals(customText);
 
             if (sameItem && sameCustom) {
+
                 int totalQuantity = oi.getQuantity() + quantity;
 
                 if (totalQuantity > menuItem.getStock()) {
-                    AlertUtil.info("Cannot add more. Max stock: " + menuItem.getStock());
-                    return;
+                    throw new IllegalArgumentException(
+                            "Cannot add more. Max stock: " + menuItem.getStock()
+                    );
                 }
 
                 oi.setQuantity(totalQuantity);
@@ -62,39 +66,36 @@ public class Order {
             }
         }
 
-        OrderItem newItem = new OrderItem(menuItem, quantity, customText);
-        items.add(newItem);
+        items.add(new OrderItem(menuItem, quantity, customText));
     }
 
     void removeItem(MenuItem menuItem, int quantity) {
-        // check for stock vs order quantity
+
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity");
         }
-        // use index based iteration for more control
+
         for (int i = 0; i < items.size(); i++) {
+
             OrderItem oi = items.get(i);
-            // compare exact food item id
             if (oi.getMenuItem().getId() == menuItem.getId()) {
-                // check for stock vs quantity
                 if (quantity > oi.getQuantity()) {
-                    AlertUtil.info("Cannot remove more than existing quantity.");
-                    return;
+                    throw new IllegalArgumentException(
+                            "Cannot remove more than existing quantity."
+                    );
                 }
 
                 int newQuantity = oi.getQuantity() - quantity;
-                // if no more stock, remove the item from order list, else set to new quantity
+
                 if (newQuantity == 0) {
                     items.remove(i);
                 } else {
                     oi.setQuantity(newQuantity);
                 }
-
                 return;
             }
         }
-        // if no items, print out items not found
-        AlertUtil.info("Item not found in cart.");
+        throw new IllegalArgumentException("Item not found in cart.");
     }
     // iterate through orderitem list and add up everything
     double calculateTotal() {

@@ -182,13 +182,21 @@ public class MenuController {
             minusBtn.getStyleClass().add("blue-btn");
             removeAllBtn.getStyleClass().add("red-btn");
             minusBtn.setOnAction(e -> {
-                order.removeItem(oi.getMenuItem(), 1);
-                updateCartUI();
+                try {
+                    order.removeItem(oi.getMenuItem(), 1);
+                    updateCartUI();
+                } catch (Exception ex) {
+                    AlertUtil.info(ex.getMessage());
+                }
             });
 
             removeAllBtn.setOnAction(e -> {
-                order.removeItem(oi.getMenuItem(), oi.getQuantity());
-                updateCartUI();
+                try {
+                    order.removeItem(oi.getMenuItem(), oi.getQuantity());
+                    updateCartUI();
+                } catch (Exception ex) {
+                    AlertUtil.info(ex.getMessage());
+                }
             });
 
             HBox row = new HBox(10, label, minusBtn, removeAllBtn);
@@ -326,12 +334,13 @@ public class MenuController {
                 String customText = controller.getSelectedText();
                 int qty = controller.getSelectedQty();
 
-                order.addItem(item, qty, customText);
-                updateCartUI();
+                try {
+                    order.addItem(item, qty, customText);
+                    updateCartUI();
+                } catch (Exception ex) {
+                    AlertUtil.info(ex.getMessage());
+                }
             }
-
-            updateCartUI();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

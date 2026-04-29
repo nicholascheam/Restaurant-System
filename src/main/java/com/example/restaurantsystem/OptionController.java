@@ -74,11 +74,6 @@ public class OptionController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    // initialize the option
-    @FXML
-    public void initialize() {
-
-    }
     // update the total price
     private void updateTotal() {
 

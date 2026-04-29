@@ -29,6 +29,7 @@
 
 
 .button {
+    -fx-font-size: 14px;
     -fx-background-color: #e4e7eb;
     -fx-text-fill: #222;
     -fx-background-radius: 8;
@@ -152,6 +153,10 @@
     -fx-alignment: center;
 }
 
+.menu-card Label {
+    -fx-alignment: center;
+}
+
 .menu-card:hover {
     -fx-border-color: #0d6efd;
     -fx-effect: dropshadow(gaussian, rgba(13,110,253,0.18), 10, 0.2, 0, 2);
@@ -179,6 +184,15 @@
     -fx-padding: 10;
 }
 
+.check-box,
+.radio-button {
+    -fx-text-fill: #222;
+}
+
+.check-box .text,
+.radio-button .text {
+    -fx-fill: #222;
+}
 
 .table-view {
     -fx-background-color: white;

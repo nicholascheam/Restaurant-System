@@ -2,15 +2,15 @@ package com.example.restaurantsystem;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -131,36 +131,155 @@ public class MenuController {
     private VBox createItemCard(MenuItem item) {
 
         Label name = new Label(item.getName());
-        Label price = new Label("$" + item.getPrice());
+        name.getStyleClass().add("subtitle-label");
 
-        Button addBtn = new Button("Add");
-        addBtn.getStyleClass().add("green-btn");
-        if (user.isAdmin()) {
-            addBtn.setDisable(true);
-        }
-        if (item.getStock() <= 0) {
-            addBtn.setDisable(true);
-            addBtn.setText("Out of Stock");
-        }
+        Label price = new Label(String.format("$%.2f", item.getPrice()));
         Label stockLabel = new Label("Stock: " + item.getStock());
+
         Label desc = new Label(item.getDescription());
         desc.setWrapText(true);
-        addBtn.setOnAction(e -> handleAddItem(item));
+        desc.setMaxWidth(180);
+        desc.setTextAlignment(TextAlignment.CENTER);
+        desc.setAlignment(Pos.CENTER);
 
-        Button infoBtn = new Button("More Info");
-        infoBtn.getStyleClass().add("blue-btn");
+        Button toggleBtn = new Button("Add ▼");
+        toggleBtn.getStyleClass().add("green-btn");
+        toggleBtn.setMaxWidth(Double.MAX_VALUE);
 
-        infoBtn.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(item.getName());
-            alert.setHeaderText(item.getName());
-            alert.setContentText(item.getDescription());
-            alert.showAndWait();
+        if (user.isAdmin()) {
+            toggleBtn.setDisable(true);
+        }
+
+        if (item.getStock() <= 0) {
+            toggleBtn.setDisable(true);
+            toggleBtn.setText("Out of Stock");
+        }
+
+        VBox expandBox = new VBox(10);
+        expandBox.getStyleClass().add("option-group");
+        expandBox.setVisible(false);
+        expandBox.setManaged(false);
+        expandBox.setPrefWidth(190);
+        expandBox.setMaxWidth(190);
+
+        int maxStock = Math.max(1, item.getStock());
+
+        Spinner<Integer> qtySpinner = new Spinner<>(1, maxStock, 1);
+        qtySpinner.setEditable(true);
+        qtySpinner.setMaxWidth(Double.MAX_VALUE);
+
+        VBox optionsBox = new VBox(8);
+
+        List<ItemOption> options = optionService.getOptions(item.getId());
+
+        List<CheckBox> checkBoxes = new ArrayList<>();
+        List<ToggleGroup> radioGroups = new ArrayList<>();
+
+        for (ItemOption opt : options) {
+
+            Label groupLabel = new Label(opt.getOptionName());
+            groupLabel.setStyle("-fx-font-weight: bold;");
+            optionsBox.getChildren().add(groupLabel);
+
+            String[] values = opt.getOptionValues().split(",");
+
+            if (opt.getControlType().equalsIgnoreCase("radio")) {
+
+                ToggleGroup group = new ToggleGroup();
+                radioGroups.add(group);
+
+                for (String val : values) {
+                    RadioButton rb = new RadioButton(val.trim());
+                    rb.setToggleGroup(group);
+                    optionsBox.getChildren().add(rb);
+                }
+
+            } else if (opt.getControlType().equalsIgnoreCase("checkbox")) {
+
+                for (String val : values) {
+                    CheckBox cb = new CheckBox(val.trim());
+                    checkBoxes.add(cb); // FIX HERE
+                    optionsBox.getChildren().add(cb);
+                }
+            }
+        }
+
+        Button confirmBtn = new Button("Add To Cart");
+        confirmBtn.getStyleClass().add("blue-btn");
+        confirmBtn.setMinWidth(160);
+        confirmBtn.setPrefWidth(160);
+        confirmBtn.setPrefHeight(40);
+
+        confirmBtn.setOnAction(e -> {
+
+            int qty = qtySpinner.getValue();
+            StringBuilder selected = new StringBuilder();
+
+            // checkboxes
+            for (CheckBox cb : checkBoxes) {
+                if (cb.isSelected()) {
+                    selected.append(cb.getText()).append(", ");
+                }
+            }
+
+            // radios
+            for (ToggleGroup tg : radioGroups) {
+                if (tg.getSelectedToggle() != null) {
+                    RadioButton rb = (RadioButton) tg.getSelectedToggle();
+                    selected.append(rb.getText()).append(", ");
+                }
+            }
+
+            String custom = selected.toString();
+
+            if (custom.endsWith(", ")) {
+                custom = custom.substring(0, custom.length() - 2);
+            }
+
+            try {
+                order.addItem(item, qty, custom);
+
+                updateCartUI();
+
+                expandBox.setVisible(false);
+                expandBox.setManaged(false);
+                toggleBtn.setText("Add ▼");
+
+            } catch (Exception ex) {
+                AlertUtil.info(ex.getMessage());
+            }
         });
-        VBox box = new VBox(10, name, price, stockLabel, addBtn, infoBtn);
+
+        expandBox.getChildren().addAll(
+                new Label("Quantity"),
+                qtySpinner
+        );
+
+        if (!options.isEmpty()) {
+            expandBox.getChildren().addAll(
+                    new Label("Options"),
+                    optionsBox
+            );
+        }
+
+        expandBox.getChildren().add(confirmBtn);
+
+        toggleBtn.setOnAction(e -> {
+
+            boolean show = !expandBox.isVisible();
+
+            expandBox.setVisible(show);
+            expandBox.setManaged(show);
+
+            toggleBtn.setText(show ? "Add ▲" : "Add ▼");
+        });
+
+        VBox box = new VBox(10, name, price, stockLabel, desc, toggleBtn, expandBox);
+
         box.getStyleClass().add("menu-card");
-        box.setPrefWidth(180);
-        box.setMinHeight(220);
+        box.setPrefWidth(220);
+        box.setMinHeight(300);
+        box.setAlignment(Pos.TOP_CENTER);
 
         return box;
     }

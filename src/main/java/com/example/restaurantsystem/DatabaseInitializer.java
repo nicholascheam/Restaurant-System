@@ -2,6 +2,7 @@ package com.example.restaurantsystem;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class DatabaseInitializer {
@@ -26,11 +27,41 @@ public class DatabaseInitializer {
 
             createTables();
             seedAdmin();
-            seedMenuItems();
-            seedItemOptions();
+            seedDemoDataIfEmpty();
             
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    private static boolean menuTableIsEmpty() {
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            Statement stmt = conn.createStatement();
+
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT COUNT(*) FROM menu_items"
+            );
+
+            rs.next();
+
+            boolean empty = rs.getInt(1) == 0;
+
+            rs.close();
+            stmt.close();
+            conn.close();
+
+            return empty;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    private static void seedDemoDataIfEmpty() {
+        if (menuTableIsEmpty()) {
+            seedMenuItems();
+            seedItemOptions();
         }
     }
     // create table

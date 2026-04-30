@@ -6,10 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -132,6 +129,9 @@ public class MenuController {
 
         Label name = new Label(item.getName());
         name.getStyleClass().add("subtitle-label");
+        name.setWrapText(true);
+        name.setTextAlignment(TextAlignment.CENTER);
+        name.setAlignment(Pos.CENTER);
 
         Label price = new Label(String.format("$%.2f", item.getPrice()));
         Label stockLabel = new Label("Stock: " + item.getStock());
@@ -161,6 +161,7 @@ public class MenuController {
         expandBox.setManaged(false);
         expandBox.setPrefWidth(190);
         expandBox.setMaxWidth(190);
+
 
         int maxStock = Math.max(1, item.getStock());
 
@@ -277,8 +278,9 @@ public class MenuController {
         VBox box = new VBox(10, name, price, stockLabel, desc, toggleBtn, expandBox);
 
         box.getStyleClass().add("menu-card");
-        box.setPrefWidth(220);
-        box.setMinHeight(300);
+        box.setFillWidth(true);
+        box.setMinHeight(Region.USE_COMPUTED_SIZE);
+        box.setPrefHeight(Region.USE_COMPUTED_SIZE);
         box.setAlignment(Pos.TOP_CENTER);
 
         return box;
